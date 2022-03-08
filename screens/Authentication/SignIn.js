@@ -6,6 +6,8 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 // Utils
 import utils from '../../utils/Utils'
 import AuthLayout from './AuthLayout';
@@ -50,11 +52,10 @@ const SignIn = ({ navigation, route }) => {
         setIsLoading(true)
         const userData = {
             username: username.toLowerCase().trim(),
-            // email: email.trim(),
             password,
             saveMe
         };
-        dispatch( userSignInAction( userData ) )
+        dispatch( userSignInAction( userData, setIsLoading ) )
         setUsername('')
         setPassword('')
         setUsernameError('')
@@ -87,7 +88,27 @@ const SignIn = ({ navigation, route }) => {
         }
     }, [selectLoggedInUser])
 
-    console.log("SIGNIN SCREEN isLoading state - ", isLoading)
+    React.useEffect(() => {
+        let mounted = true;
+            (async () => {
+                try{
+                    const token = await AsyncStorage.getItem('token')
+                    const userId = await AsyncStorage.getItem('userId')
+                    console.log("MAIN_LAYOUT",userId,token)
+                    if(token || userId){
+                        // console.log(token)
+                        if( mounted ) navigation.navigate("Home")
+                    }
+                }
+                catch(err){
+                    setIsLoading(false)
+                }
+            })()
+        
+        return () => {
+            mounted = false
+        }
+    }, [])
 
     return (
         <AuthLayout

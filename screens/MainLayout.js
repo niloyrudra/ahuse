@@ -125,7 +125,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
     const profileTabColor = useSharedValue( COLORS.white )
 
     const selectedToken = useSelector( state => state.userReducer.token )
-    
+
     React.useEffect(() => {
         // let controller = new AbortController();
         let isMounted = true;
@@ -214,8 +214,10 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
             (async () => {
                 try{
                     const token = await AsyncStorage.getItem('token')
-                    if(token){
-                        console.log(token)
+                    const userId = await AsyncStorage.getItem('userId')
+                    console.log("MAIN_LAYOUT",userId,token)
+                    if(token || userId){
+                        // console.log(token)
                         if( mounted ) setIsLoggedIn(true)
                     }
                     else{

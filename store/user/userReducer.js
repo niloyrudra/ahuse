@@ -1,12 +1,17 @@
-import { SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_FAIL, SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAIL, LOG_OUT, SET_TEMP_TOKEN } from "./userActions";
+import { SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_USER_DATA_SUCCESS, SIGN_IN_USER_DATA_FAIL, SIGN_IN_FAIL, SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAIL, LOG_OUT, SET_TEMP_TOKEN } from "./userActions";
 
 const initialState = {
     users: [],
+    userId: "",
     username: "",
     email: "",
     displayname: "",
+    role: "",
     token: "",
     tempToken: '',
+    tempTokenExpIn: 0,
+    TokenExpIn: 0,
+    tokenType: 'Bearer',
     error: null,
     isLoading: false
 };
@@ -43,12 +48,22 @@ const userReducer = ( state = initialState, action ) => {
             return {
                 ...state,
                 isLoading: false,
-                username: action.userData.user_nicename,
-                email: action.userData.user_email,
+                token: action.token,
+                TokenExpIn: action.TokenExpIn,
+                tokenType: action.tokenType,
+            }
+        case SIGN_IN_USER_DATA_SUCCESS: 
+            return {
+                ...state,
+                isLoading: false,
+                userId: action.userData.user_id ? action.userData.user_id : null,
+                username: action.userData.user_nicename ? action.userData.user_nicename : '',
+                email: action.userData.user_email ? action.userData.user_email : '',
                 displayname:  action.userData.user_display_name ? action.userData.user_display_name : '',
-                token: action.token
+                role:  action.userData.role ? action.userData.role : 'subscriber',
             }
         case SIGN_IN_FAIL:
+        case SIGN_IN_USER_DATA_FAIL:
             return {
                 ...state,
                 isLoading: false,

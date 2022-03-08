@@ -26,6 +26,7 @@ const AddProperty = ({ navigation, route }) => {
     
     const dispatch = useDispatch()
     const [userId, setUserId] = React.useState(null);
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
     const [token, setToken] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false)
     const [propertyStatus, setPropertyStatus] = React.useState([])
@@ -45,15 +46,36 @@ const AddProperty = ({ navigation, route }) => {
     const user_Id = useSelector( state => state.userReducer?.userId )
 
     React.useEffect(() => {
-        if(user_Id){
-            // console.log((user_Id))
-            setUserId(user_Id)
+        let mounted = true;
+            (async () => {
+                try{
+                    const token = await AsyncStorage.getItem('token')
+                    const userId = await AsyncStorage.getItem('userId')
+                    console.log("ADD_LISTING",userId,token)
+                    if(token || userId){
+                        // console.log(token)
+                        if( mounted ){
+                            setUserId(userId)
+                            setIsLoggedIn(true)
+                        }
+                    }
+                    else{
+                        // console.log(token)
+                        if( mounted ){
+                            setUserId(null)
+                            setIsLoggedIn(false)
+                        }
+                    }
+                }
+                catch(err){
+                    setIsLoggedIn(false)
+                }
+            })()
+        
+        return () => {
+            mounted = false
         }
-        (async () => {
-            const userId = await AsyncStorage.getItem('userId')
-            console.log("user ID ->>", userId)
-        })()
-    },[])
+    }, [])
 
     const { register, setValue, handleSubmit, control, reset, formState: { errors, isValid } } = useForm({
         defaultValues: {

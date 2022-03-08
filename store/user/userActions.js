@@ -4,6 +4,7 @@ import constants from '../../constants/constants'
 export const SIGN_IN = "SIGN_IN"
 export const SIGN_IN_SUCCESS = "SIGN_IN_SUCCESS"
 export const SIGN_IN_USER_DATA_SUCCESS = "SIGN_IN_USER_DATA_SUCCESS"
+export const SIGN_IN_USER_DATA_FAIL = "SIGN_IN_USER_DATA_FAIL"
 export const SIGN_IN_FAIL = "SIGN_IN_FAIL"
 
 export const SIGN_UP = "SIGN_UP"
@@ -22,34 +23,38 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // SIGN_UP ACTION
-// export const setTempToken = ( temp_token ) => {
 export const getTempToken = () => {
 
     return dispatch => {
-        // axios.post(`${constants.ROOT_URL}/jwt-auth/v1/token`, {
-        axios.post(`${constants.ROOT_URL}/api/v1/token`, {
-          username: constants.USERNAME,
-          password: constants.PASSWORD
-        })
-        .then(response => {
-              console.log("TempToken", response.data)
-            if( response.data.jwt_token)
-            {
-              //Set token and email in local storage in case Redux data is lost
-              dispatch({type: SET_TEMP_TOKEN, temp_token: response.data.jwt_token, tempTokenExpIn: response.data.expires_in, tokenType: response.data.token_type});
-              AsyncStorage.setItem("temporaryToken", JSON.stringify( response.data.jwt_token ));
-              AsyncStorage.setItem("tokenType", JSON.stringify( response.data.token_type ));
-              AsyncStorage.setItem("tempTokenExpIn", JSON.stringify( response.data.expires_in ));
-            }
-
-        })
-        .catch(error => {
-            console.log("TempToken Action Fails...")
-            dispatch({
-                type: SET_TEMP_TOKEN_FAIL,
-                error: error
+        try{
+            // axios.post(`${constants.ROOT_URL}/jwt-auth/v1/token`, {
+            axios.post(`${constants.ROOT_URL}/api/v1/token`, {
+              username: constants.USERNAME,
+              password: constants.PASSWORD
             })
-        })
+            .then(response => {
+                  console.log("TempToken", response.data)
+                if( response.data.jwt_token)
+                {
+                  //Set token and email in local storage in case Redux data is lost
+                  dispatch({type: SET_TEMP_TOKEN, temp_token: response.data.jwt_token, tempTokenExpIn: response.data.expires_in, tokenType: response.data.token_type});
+                  AsyncStorage.setItem("temporaryToken", JSON.stringify( response.data.jwt_token ));
+                  AsyncStorage.setItem("tokenType", JSON.stringify( response.data.token_type ));
+                  AsyncStorage.setItem("tempTokenExpIn", JSON.stringify( response.data.expires_in ));
+                }
+    
+            })
+            .catch(error => {
+                console.log("TempToken Action Fails...")
+                dispatch({
+                    type: SET_TEMP_TOKEN_FAIL,
+                    error: error
+                })
+            });
+        }
+        catch(err) {
+            console.log("getTemporary Token >>", err)
+        }
     }
 }
 
@@ -57,35 +62,40 @@ export const getTempToken = () => {
 export const userSignUpAction = ( userData, setIsLoading, setRequestStatus ) => {
 
     return dispatch => {
-        fetch( `${constants.ROOT_URL}/wp/v2/users/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                "Accept": "application/json",
-                "Authorization": "Bearer " + userData.tempToken
-            },
-            body: JSON.stringify({
-                username: userData.username.trim(),
-                password: userData.password,
-                email: userData.email,
+        try{
+            fetch( `${constants.ROOT_URL}/wp/v2/users/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Accept": "application/json",
+                    "Authorization": "Bearer " + userData.tempToken
+                },
+                body: JSON.stringify({
+                    username: userData.username.trim(),
+                    password: userData.password,
+                    email: userData.email,
+                })
+            } )
+            .then(res => res.json())
+            .then( userData => {
+                console.log(userData)
+                dispatch({
+                    type: SIGN_UP_SUCCESS,
+                    userDetail:userData,
+                })
+    
+                setIsLoading(false)
+                setRequestStatus(true)
             })
-        } )
-        .then(res => res.json())
-        .then( userData => {
-            console.log(userData)
-            dispatch({
-                type: SIGN_UP_SUCCESS,
-                userDetail:userData,
+            .catch(error => {
+                console.log("Sign Up Fails", error)
+                dispatch({ type: SIGN_UP_FAIL, error: error })
+                setIsLoading(false)
             })
-
-            setIsLoading(false)
-            setRequestStatus(true)
-        })
-        .catch(error => {
-            console.log("Sign Up Fails", error)
-            dispatch({ type: SIGN_UP_FAIL, error: error })
-            setIsLoading(false)
-        })
+        }
+        catch(err) {
+            console.log("User Sign up err >>", err)
+        }
     }
 }
 
@@ -93,7 +103,7 @@ export const userSignUpAction = ( userData, setIsLoading, setRequestStatus ) => 
 export const userSignInAction = ( userData, setIsLoading ) => {
 
     return async  dispatch => {
-        // try{
+        try{
             // const response = await axios.post( `${constants.ROOT_URL}wp-json/jwt-auth/v1/token`, userData )
             // fetch( `${constants.ROOT_URL}/jwt-auth/v1/token`, {
             await fetch( `${constants.ROOT_URL}/api/v1/token`, {
@@ -141,7 +151,7 @@ export const userSignInAction = ( userData, setIsLoading ) => {
             } )
             .then( res => res.json() )
             .then( resJson => {
-                console.log(resJson)
+                // console.log(resJson)
                 if( resJson.status == 200 ){
                     dispatch({
                         type: SIGN_IN_USER_DATA_SUCCESS,
@@ -169,21 +179,31 @@ export const userSignInAction = ( userData, setIsLoading ) => {
                 })
                 setIsLoading(false)
             })
+        }
+        catch(err) {
+            console.log("User Login err >>", err)
+        }
     };
 }
 
 // SIGN_OUT ACTION
 export const userSignOutAction = () => {
     return async (dispatch) => {
-        await AsyncStorage.removeItem("token")
-        await AsyncStorage.removeItem("tempToken")
-        await AsyncStorage.removeItem("TokenExpIn")
-        await AsyncStorage.removeItem("email")
-        await AsyncStorage.removeItem("username")
-        await AsyncStorage.removeItem("displayName")
-        await AsyncStorage.removeItem("userId")
-        await AsyncStorage.removeItem("role")
-        await AsyncStorage.removeItem(`favProps`)
-        dispatch({ type: LOG_OUT })
+        try{
+            await AsyncStorage.removeItem("token", (err) => console.log('token_err', err) );
+            await AsyncStorage.removeItem("tempToken", (err) => console.log('tempToken_err', err) );
+            await AsyncStorage.removeItem("TokenExpIn", (err) => console.log('TokenExpIn_err', err) );
+            await AsyncStorage.removeItem("email", (err) => console.log('email_err', err) );
+            await AsyncStorage.removeItem("username", (err) => console.log('username_err', err) );
+            await AsyncStorage.removeItem("displayName", (err) => console.log('displayName_err', err) );
+            await AsyncStorage.removeItem("userId", (err) => console.log('userId_err', err) );
+            await AsyncStorage.removeItem("role", (err) => console.log('role_err', err) );
+            await AsyncStorage.removeItem(`favProps`, (err) => console.log('favProps_err', err) );
+            await AsyncStorage.clear();
+            dispatch({ type: LOG_OUT })
+        }
+        catch(err) {
+            console.log("Log out err >>", err)
+        }
     }
 }

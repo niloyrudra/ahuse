@@ -23,16 +23,19 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
     const [ ownedProperties, setOwnedProperties ] = React.useState([])
 
     React.useEffect(() => {
+        let mounted = true;
         (async () => {
             try{
                 const userId = await AsyncStorage.getItem("userId")
                 const email = await AsyncStorage.getItem("email")
                 const name = await AsyncStorage.getItem("username")
                 const displayName = await AsyncStorage.getItem("displayName")
-                if(displayName) setDisplayName(displayName)
-                if(userId) setUserId(userId)
-                if(name) setUsername(name)
-                if(email) setEmail(email)
+                if( mounted ) {
+                    if(displayName) setDisplayName(displayName)
+                    if(userId) setUserId(userId)
+                    if(name) setUsername(name)
+                    if(email) setEmail(email)
+                }
             }
             catch(err){
                 console.log("Profile data Async Error", err)
@@ -40,13 +43,15 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
                 setDisplayName('')
                 setEmail('')
             }
-        })()
+        })();
+        return () => mounted = false
     }, [])
 
     React.useEffect(() => {
         if(selectedProperties && userId)
         {
             const properties = selectedProperties.filter( item => item.publisher_id == userId )
+            console.log(userId, properties)
             setOwnedProperties( properties )
         }
         return () => {

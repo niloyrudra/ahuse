@@ -34,22 +34,36 @@ const Drawer = createDrawerNavigator()
 
 const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const [ isLoggedIn, setIsLoggedIn ] = React.useState(false)
 
 
     React.useEffect(() => {
-        (async () => {
-            const hasToken = await AsyncStorage.getItem("token")
-            if( hasToken ) setIsLoggedIn(true)
-        })()
+        let mounted = true;
+            (async () => {
+                try{
+                    const token = await AsyncStorage.getItem('token')
+                    const userId = await AsyncStorage.getItem('userId')
+                    console.log("DRAWER_NAV",userId,token)
+                    if(token || userId){
+                        // console.log(token)
+                        if( mounted ) setIsLoggedIn(true)
+                    }
+                    else{
+                        // console.log(token)
+                        if( mounted ) setIsLoggedIn(false)
+                    }
+                }
+                catch(err){
+                    setIsLoggedIn(false)
+                }
+            })()
+        
         return () => {
-            setIsLoggedIn(false)
+            mounted = false
         }
     }, [])
     
-
-
     return (
         <DrawerContentScrollView
             scrollEnabled={true}
