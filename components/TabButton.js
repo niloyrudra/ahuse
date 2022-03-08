@@ -40,7 +40,7 @@ const TabButton = ({ label, icon, onPress, isFocused, outerContainerStyles, inne
                         }}
                     />
 
-                    {
+                    {/* {
                         isFocused && (
                             <Text
                                 numberOfLines={1}
@@ -53,7 +53,7 @@ const TabButton = ({ label, icon, onPress, isFocused, outerContainerStyles, inne
                                 {label}
                             </Text>
                             )
-                    }
+                    } */}
                     
 
                 </Animated.View>

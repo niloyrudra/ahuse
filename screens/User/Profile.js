@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Image, Text, View } from 'react-native'
 // import useAxios from 'axios-hooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux'
@@ -18,16 +18,19 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
 
     const [ email, setEmail ] = React.useState('')
     const [ username, setUsername ] = React.useState('')
+    const [ userId, setUserId ] = React.useState(null)
     const [ displayName, setDisplayName ] = React.useState('')
     const [ ownedProperties, setOwnedProperties ] = React.useState([])
 
     React.useEffect(() => {
         (async () => {
             try{
+                const userId = await AsyncStorage.getItem("userId")
                 const email = await AsyncStorage.getItem("email")
                 const name = await AsyncStorage.getItem("username")
                 const displayName = await AsyncStorage.getItem("displayName")
                 if(displayName) setDisplayName(displayName)
+                if(userId) setUserId(userId)
                 if(name) setUsername(name)
                 if(email) setEmail(email)
             }
@@ -41,10 +44,9 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
     }, [])
 
     React.useEffect(() => {
-        if(selectedProperties && email !== '')
+        if(selectedProperties && userId)
         {
-            // console.log(selectedProperties[0])
-            const properties = selectedProperties.filter( item => item.creator_email == email )
+            const properties = selectedProperties.filter( item => item.publisher_id == userId )
             setOwnedProperties( properties )
         }
         return () => {
@@ -91,10 +93,6 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
                             displayName && <Text style={{color:COLORS.darkGray,...FONTS.h1,marginTop:SIZES.padding,marginBottom:SIZES.radius}}>Hello! {displayName}</Text>
                         } */}
                         
-                        {
-                            email !== "" && <Text style={{color:COLORS.gray,...FONTS.h3,marginBottom:SIZES.padding}}>Your registered e-mail - {email}</Text>
-                        }
-
                         <LineDivider/>
                         
                         <HeaderWithItemNum

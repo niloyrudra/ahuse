@@ -17,7 +17,7 @@ import { connect } from 'react-redux'
 import { getAllCats, getAllTaxData } from '../../store/property/propertyActions';
 
 // Constants
-import constants from '../../constants/constants';
+// import constants from '../../constants/constants';
 import icons from '../../constants/icons';
 import { COLORS ,FONTS ,SIZES } from '../../constants/theme';
 

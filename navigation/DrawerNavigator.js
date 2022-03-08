@@ -22,6 +22,7 @@ import MyCards from '../screens/Cards/MyCards'
 import AddNewCard from '../screens/Cards/AddNewCard'
 import Success from '../screens/Checkout/Success'
 import MapScreen from '../screens/Map/MapScreen'
+import SingleMapScreen from '../screens/Map/SingleMapScreen';
 ///
 // Redux
 import { connect } from 'react-redux'
@@ -303,9 +304,11 @@ const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
                         gestureEnabled:false
                     }} />}
                 </Drawer.Screen>
-                {/* <Drawer.Screen name="Success" component={Success} options={{
+                <Drawer.Screen name="SingleMap">
+                    {(props) => <SingleMapScreen {...props} options={{
                         gestureEnabled:false
-                    }} /> */}
+                    }} />}
+                </Drawer.Screen>
 
             </Drawer.Navigator>
         </View>
