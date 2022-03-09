@@ -31,11 +31,15 @@ const AuthLayout = ({ title, subtitle, titleContainerStyle, children }) => {
                     }}
                 >
                     <Image
-                        source={images.logo_00}
+                        source={images.logo_01}
                         resizeMode='contain'
                         style={{
+                            // width: 100,
+                            // height:100,
+                            width: SIZES.width * 0.5,
                             height:100,
-                            width:200
+                            tintColor:COLORS.primary,
+                            marginTop:16
                         }}
                     />
                 </View>

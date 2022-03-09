@@ -24,10 +24,10 @@ const OnBoardingStackNavigator = () => {
             }}
             initialRouteName={'Boarding'}
         >
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="Boarding"
                 component={OnBoarding}
-            />
+            /> */}
 
             <Stack.Screen
                 name="SignIn"
@@ -44,10 +44,10 @@ const OnBoardingStackNavigator = () => {
                 component={ForgotPassword}
             />
 
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="Otp"
                 component={Otp}
-            />
+            /> */}
         </Stack.Navigator>
     )
 }

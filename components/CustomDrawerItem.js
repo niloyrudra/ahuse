@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 
-import icons from '../constants/icons'
+// import icons from '../constants/icons'
 import {COLORS, SIZES, FONTS} from '../constants/theme'
 
 const CustomDrawerItem = ({ label, icon, onPress, containerStyle, isFocused }) => {

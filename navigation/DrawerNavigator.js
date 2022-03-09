@@ -36,6 +36,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
 
     const dispatch = useDispatch();
     const [ isLoggedIn, setIsLoggedIn ] = React.useState(false)
+    const [ userName, setUserName ] = React.useState('')
 
 
     React.useEffect(() => {
@@ -44,10 +45,14 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                 try{
                     const token = await AsyncStorage.getItem('token')
                     const userId = await AsyncStorage.getItem('userId')
-                    console.log("DRAWER_NAV",userId,token)
-                    if(token || userId){
+                    const username = await AsyncStorage.getItem('username')
+                    console.log("DRAWER_NAV", username, userId,token)
+                    if( token && userId && username ){
                         // console.log(token)
-                        if( mounted ) setIsLoggedIn(true)
+                        if( mounted ) {
+                            setIsLoggedIn(true)
+                            setUserName( username )
+                        }
                     }
                     else{
                         // console.log(token)
@@ -109,7 +114,12 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                         marginTop: SIZES.radius,
                         alignItems: "center"
                     }}
-                    onPress={() => console.log("profile")}
+                    onPress={() => {
+                        if(!userName) return
+                        setSelectedTab( constants.screens.profile )
+                        navigation.navigate("MainLayout")
+                        
+                    }}
                 >
                     <Image
                         source={images.profile}
@@ -122,7 +132,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                     <View
                     style={{marginLeft: SIZES.radius}}>
                         <Text style={{color: COLORS.white, ...FONTS.h3 }}
-                        >Ahuse</Text>
+                        >{ userName ? userName : 'Ahuse' }</Text>
                         <Text style={{color:COLORS.white, ...FONTS.body4}}>View your profile</Text>
                     </View>
                 </TouchableOpacity>
@@ -226,7 +236,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                                 setIsLoggedIn(false)
                                 navigation.closeDrawer()
                                 console.log("logged out")
-                                // navigation.navigate("SignIn")
+                                navigation.navigate("Auth")
                             }}
                         />
                         :
@@ -235,7 +245,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                             icon={icons.login}
                             onPress={() => {
                                 navigation.closeDrawer()
-                                navigation.navigate("SignIn")
+                                navigation.navigate("Auth")
                             }}
                         />
                     }

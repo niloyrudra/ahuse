@@ -88,7 +88,7 @@ const SignUp = ({ navigation, route }) => {
             password: password,
             tempToken: tempToken
         };
-        console.log(userData)
+        console.log("SIGN_UP", userData)
         dispatch( userSignUpAction( userData, setIsLoading, setRequestStatus ) )
     };
 

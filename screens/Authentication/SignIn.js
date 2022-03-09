@@ -94,7 +94,7 @@ const SignIn = ({ navigation, route }) => {
                 try{
                     const token = await AsyncStorage.getItem('token')
                     const userId = await AsyncStorage.getItem('userId')
-                    console.log("MAIN_LAYOUT",userId,token)
+                    console.log("SIGN_IN_LAYOUT",userId,token)
                     if(token || userId){
                         // console.log(token)
                         if( mounted ) navigation.navigate("Home")

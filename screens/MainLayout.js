@@ -1,9 +1,7 @@
 import React, { useRef } from 'react';
 import {
     View,
-    Text,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     Image,
     FlatList
 } from 'react-native';
@@ -26,12 +24,8 @@ import TabButton from '../components/TabButton';
 // Screens
 // Home
 import Home from "../screens/Home/Home"
-// Property Detail
-// import PropertyDetail from './property/PropertyDetail';
 // Search
 import Search from "../screens/Search/Search";
-// Cart
-// import CartTab from "../screens/Cart/CartTab"
 // Add Property
 import AddProperty from '../screens/Property/AddProperty';
 // Favourite
@@ -44,9 +38,7 @@ import constants from '../constants/constants';
 import icons from '../constants/icons';
 import images from '../constants/images';
 import { COLORS ,FONTS ,SIZES } from '../constants/theme';
-// import TopProfileButton from '../components/TopProfileButton';
 import Profile from './User/Profile';
-import CartQuantityButton from '../components/CartQuantityButton';
 
 const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties, setSelectedTab, setAllProperties, setAllCats, setPopularList, setRecommendedList } ) => {
 
@@ -208,6 +200,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
     } )
 
     React.useEffect(() => {
+        console.log( "Current Time: ", Date.now() )
         let mounted = true;
         setSelectedTab( constants.screens.home )
         if(!isLoggedIn) {
