@@ -47,13 +47,18 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
         return () => mounted = false
     }, [])
 
+
+
     React.useEffect(() => {
         if(selectedProperties && userId)
         {
             const properties = selectedProperties.filter( item => item.publisher_id == userId )
-            console.log(userId, properties)
+            // console.log(userId, properties)
             setOwnedProperties( properties )
         }
+        // else {
+        //     //
+        // }
         return () => {
             setOwnedProperties([])
         }

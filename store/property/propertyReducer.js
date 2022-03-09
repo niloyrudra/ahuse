@@ -1,4 +1,4 @@
-import { GET_ALL_PROPERTIES, GET_ALL_CATS, GET_ALL_TYPES, GET_RECOMMENDED, GET_POPULAR, INSERT_NEW_PROPERTY, INSERT_NEW_PROPERTY_SUCCESS, INSERT_NEW_PROPERTY_FAIL, GET_ALL_TAX_DATA, GET_ALL_TAX_DATA_SUCCESS, GET_ALL_TAX_DATA_FAIL } from "./propertyActions";
+import { GET_ALL_PROPERTIES, GET_ALL_PROPERTY_DATA_REFETCH, GET_ALL_PROPERTY_DATA_REFETCH_FAIL, GET_ALL_CATS, GET_ALL_TYPES, GET_RECOMMENDED, GET_POPULAR, INSERT_NEW_PROPERTY, INSERT_NEW_PROPERTY_SUCCESS, INSERT_NEW_PROPERTY_FAIL, GET_ALL_TAX_DATA, GET_ALL_TAX_DATA_SUCCESS, GET_ALL_TAX_DATA_FAIL } from "./propertyActions";
 
 const initialState = {
     allProperties: [],
@@ -54,11 +54,7 @@ const propertyReducer = ( state = initialState, action ) => {
                 isLoading: false
             }
         case GET_ALL_PROPERTIES :
-            return {
-                ...state,
-                allProperties: action.payload
-            }
-        case GET_ALL_PROPERTIES :
+        case GET_ALL_PROPERTY_DATA_REFETCH :
             return {
                 ...state,
                 allProperties: action.payload

@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, FlatList, Image, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useForm, Controller } from 'react-hook-form';
 
+// import { getAllRefetchPropertyData } from '../../store/property/propertyActions';
+
 // Constants
 import { COLORS, FONTS, SIZES } from '../../constants/theme';
 import constants from '../../constants/constants';

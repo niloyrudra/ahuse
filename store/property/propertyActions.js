@@ -1,6 +1,8 @@
 import constants from "../../constants/constants"
 
 export const GET_ALL_PROPERTIES = "GET_ALL_PROPERTIES"
+export const GET_ALL_PROPERTY_DATA_REFETCH = "GET_ALL_PROPERTY_DATA_REFETCH"
+export const GET_ALL_PROPERTY_DATA_REFETCH_FAIL = "GET_ALL_PROPERTY_DATA_REFETCH_FAIL"
 export const GET_ALL_CATS = "GET_ALL_CATS"
 export const GET_ALL_TYPES = "GET_ALL_TYPES"
 export const GET_POPULAR = "GET_POPULAR"
@@ -50,6 +52,7 @@ export const insertNewProperty = ( data, token, setIsLoading, setRequestStatus )
                     fail:false,
                     msg: "Congratulations! Your request has submitted successfully."
                 });
+                dispatch( getAllRefetchPropertyData() )
             }
 
             setIsLoading(false);
@@ -125,6 +128,33 @@ const setPropertyList = ( propertyData ) => {
 }
 export const getAllProperties = ( propertyData ) => {
     return dispatch => dispatch( setPropertyList( propertyData ) )
+}
+
+// Get All Properties Refetching
+const setAllRefetchPropertyData = ( reFetchedData ) => {
+    return {
+        type: GET_ALL_PROPERTY_DATA_REFETCH,
+        payload: reFetchedData
+    }
+}
+const getAllRefetchPropertyData = () => {
+    return dispatch => {
+        fetch( `${constants.ROOT_URL}/ahuse/api/v1/properties`, { method: "GET" } )
+            .then( res => res.json() )
+            .then( data => {
+                console.log("Data ReFetched >>>>> ", data.length)
+                if(data)
+                {
+                    dispatch( setAllRefetchPropertyData( data ) )
+                }
+            } )
+            .catch( error => {
+                dispatch({
+                    type: GET_ALL_PROPERTY_DATA_REFETCH_FAIL,
+                    error: error
+                })
+            } )
+    }
 }
 
 // Get All Properties

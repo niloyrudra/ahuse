@@ -200,8 +200,43 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
     } )
 
     React.useEffect(() => {
-        console.log( "Current Time: ", Date.now() )
+        // console.log( "Current Time: ", Date.now() )
+        let mounted1 = true;
         let mounted = true;
+        (async() => {
+            const currentTime = Date.now(); // Get the current time in milliseconds
+            try {
+                const tokenExpIn = await AsyncStorage.getItem( "TokenExpIn" )
+                const startSession = await AsyncStorage.getItem( "startSession" )
+                if(mounted1){
+
+                    if( currentTime && tokenExpIn && startSession ) {
+                        console.log('Session Detail >> ', currentTime, startSession, tokenExpIn)
+                        if( currentTime > ( parseInt( tokenExpIn ) + parseInt( startSession ) ) ) {
+                            await AsyncStorage.removeItem("token", (err) => console.log('token_err', err) );
+                            await AsyncStorage.removeItem("tempToken", (err) => console.log('tempToken_err', err) );
+                            await AsyncStorage.removeItem("TokenExpIn", (err) => console.log('TokenExpIn_err', err) );
+                            await AsyncStorage.removeItem("startSession", (err) => console.log('startSession_err', err) );
+                            await AsyncStorage.removeItem("email", (err) => console.log('email_err', err) );
+                            await AsyncStorage.removeItem("username", (err) => console.log('username_err', err) );
+                            await AsyncStorage.removeItem("displayName", (err) => console.log('displayName_err', err) );
+                            await AsyncStorage.removeItem("userId", (err) => console.log('userId_err', err) );
+                            await AsyncStorage.removeItem("role", (err) => console.log('role_err', err) );
+                            await AsyncStorage.removeItem(`favProps`, (err) => console.log('favProps_err', err) );
+                            await AsyncStorage.clear();
+                        }
+                        else{
+                            console.log( "Still have time to expire the token!" )
+                        }
+                    }
+                }
+
+            }
+            catch(err) {
+                console.log(err)
+            }
+        })()
+
         setSelectedTab( constants.screens.home )
         if(!isLoggedIn) {
             (async () => {
@@ -223,6 +258,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
             })()
         }
         return () => {
+            mounted1 = false
             mounted = false
         }
     }, [])

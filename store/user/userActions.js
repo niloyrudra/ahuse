@@ -131,6 +131,7 @@ export const userSignInAction = ( userData, setIsLoading ) => {
                 AsyncStorage.removeItem("tempToken")
                 AsyncStorage.setItem("token", JSON.stringify( data.jwt_token ))
                 AsyncStorage.setItem("TokenExpIn", JSON.stringify( data.expires_in ))
+                AsyncStorage.setItem("startSession", JSON.stringify( Date.now() ))
             } )
             .catch(error => {
                 console.log("SignIn Action Fails...", error)
@@ -193,6 +194,7 @@ export const userSignOutAction = () => {
             await AsyncStorage.removeItem("token", (err) => console.log('token_err', err) );
             await AsyncStorage.removeItem("tempToken", (err) => console.log('tempToken_err', err) );
             await AsyncStorage.removeItem("TokenExpIn", (err) => console.log('TokenExpIn_err', err) );
+            await AsyncStorage.removeItem("startSession", (err) => console.log('startSession_err', err) );
             await AsyncStorage.removeItem("email", (err) => console.log('email_err', err) );
             await AsyncStorage.removeItem("username", (err) => console.log('username_err', err) );
             await AsyncStorage.removeItem("displayName", (err) => console.log('displayName_err', err) );
