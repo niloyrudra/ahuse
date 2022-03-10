@@ -1,4 +1,4 @@
-import { GET_ALL_PROPERTIES, GET_ALL_PROPERTY_DATA_REFETCH, GET_ALL_PROPERTY_DATA_REFETCH_FAIL, GET_ALL_CATS, GET_ALL_TYPES, GET_RECOMMENDED, GET_POPULAR, INSERT_NEW_PROPERTY, INSERT_NEW_PROPERTY_SUCCESS, INSERT_NEW_PROPERTY_FAIL, GET_ALL_TAX_DATA, GET_ALL_TAX_DATA_SUCCESS, GET_ALL_TAX_DATA_FAIL } from "./propertyActions";
+import { GET_ALL_PROPERTIES, GET_ALL_PROPERTY_FAIL, GET_ALL_PROPERTY_DATA_REFETCH, SET_FAV_PROPERTY_LIST, SET_FAV_PROPERTY_LIST_FAIL, GET_ALL_PROPERTY_DATA_REFETCH_FAIL, GET_ALL_CATS, GET_ALL_TYPES, GET_RECOMMENDED, GET_POPULAR, INSERT_NEW_PROPERTY, INSERT_NEW_PROPERTY_SUCCESS, INSERT_NEW_PROPERTY_FAIL, GET_ALL_TAX_DATA, GET_ALL_TAX_DATA_SUCCESS, GET_ALL_TAX_DATA_FAIL } from "./propertyActions";
 
 const initialState = {
     allProperties: [],
@@ -6,6 +6,7 @@ const initialState = {
     allTypes: [],
     popular: [],
     recommended: [],
+    favPropIds: [],
     newPropertyDetail: '',
     allTax: [],
     isLoading: false,
@@ -78,6 +79,11 @@ const propertyReducer = ( state = initialState, action ) => {
             return {
                 ...state,
                 popular: action.payload
+            }
+        case SET_FAV_PROPERTY_LIST :
+            return {
+                ...state,
+                favPropIds: action.payload
             }
             
         default :

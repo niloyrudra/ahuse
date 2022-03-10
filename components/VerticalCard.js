@@ -47,7 +47,7 @@ const VerticalCard = ( { containerStyle, item, imageStyle, onPress } ) => {
                     style={{
                         width:20,
                         height:20,
-                        tintColor: item?.isFav ? COLORS.primary : COLORS.gray
+                        tintColor: item?.is_fav ? COLORS.primary : COLORS.gray
                     }}
                 />
             </View>

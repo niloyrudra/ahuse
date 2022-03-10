@@ -6,14 +6,11 @@ import Animated from 'react-native-reanimated';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// import { useDispatch } from 'react-redux'
-// import { setNewCartItem } from '../../store/cart/cartActions';
+import { useDispatch } from 'react-redux'
 
 // Components
 import Header from '../../components/Header';
 import LineDivider from '../../components/LineDivider';
-// import CartQuantityButton from '../../components/CartQuantityButton';
-// import StepperInput from '../../components/StepperInput';
 import TextButton from '../../components/TextButton';
 import TextIconButton from '../../components/TextIconButton';
 
@@ -23,17 +20,17 @@ import constants from '../../constants/constants';
 import icons from '../../constants/icons'
 import utils from '../../utils/Utils';
 
+import { updateFavPropertyList } from '../../store/property/propertyActions';
 
 const PropertyDetail = ({navigation, route}) => {
 
-    
     const property = route.params.item
+    const dispatch = useDispatch();
 
     const [ email, setEmail ] = React.useState('')
     const [ userId, setUserId ] = React.useState(null)
-    const [ isFav, setIsFav ] = React.useState(false)
-    const [ favProps, setFavProps ] = React.useState([])
-    // const dispatch = useDispatch()
+    const [ isFav, setIsFav ] = React.useState(property?.is_fav)
+    // const [ favProps, setFavProps ] = React.useState([])
 
     const progress = useDrawerProgress()
     const scale = Animated.interpolateNode( progress, {
@@ -48,16 +45,16 @@ const PropertyDetail = ({navigation, route}) => {
 
     React.useEffect(() => {
         let mounted = true;
-        
+        // console.log(property)
         (async () => {
             try{
                 const userId = await AsyncStorage.getItem("userId")
                 const email = await AsyncStorage.getItem("email")
-                const favPropList = await getFavPropList()
+                // const favPropList = await getFavPropList()
                 if(mounted) {
                     if(userId) setUserId(userId)
                     if(email) setEmail(email)
-                    if(favPropList) setFavProps(favPropList)
+                    // if(favPropList) setFavProps(favPropList)
                 }
             }
             catch(err){
@@ -131,7 +128,7 @@ const PropertyDetail = ({navigation, route}) => {
                             style={{
                                 width:20,
                                 height:20,
-                                tintColor: ( isFav && favProps.length && favProps.includes(property.id) ) ? COLORS.primary : COLORS.gray
+                                tintColor: ( isFav || property.is_fav ) ? COLORS.primary : COLORS.gray
                             }}
                         />
 
@@ -557,25 +554,11 @@ const PropertyDetail = ({navigation, route}) => {
     }
 
     // Handler
-    const getFavPropList = async () => {
-        const list = await AsyncStorage.getItem(`favProps${userId}`)
-        return list ? JSON.parse(list) : []
-    }
     const setFavPropList = async () => {
         if( userId ) {
-            let newList = []
+            console.log("triggered")
             setIsFav(!isFav);
-            const propertyId = property.id
-
-            if(favProps.includes(propertyId)) {
-                newList = favProps.filter( favProp => favProp !== propertyId )
-            }
-            else{
-                newList = [...favProps, propertyId]
-            }
-
-            setFavProps(newList)
-            AsyncStorage.setItem( `favProps${userId}`, JSON.stringify( newList ) ) //favProps
+            dispatch( updateFavPropertyList( property.id ) )
         }
     }
 
@@ -661,7 +644,8 @@ const PropertyDetail = ({navigation, route}) => {
                             style={{
                                 width:20,
                                 height:20,
-                                tintColor: ( isFav && favProps.length && favProps.includes(property.id) ) ? COLORS.primary : COLORS.gray
+                                // tintColor: ( isFav && favProps.length && favProps.includes(property.id) ) ? COLORS.primary : COLORS.gray
+                                tintColor: ( isFav || property.is_fav ) ? COLORS.primary : COLORS.gray
                             }}
                         />
                     </TouchableOpacity>
