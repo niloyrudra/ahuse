@@ -6,11 +6,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Constants
 import constants from "../constants/constants";
+// import { useDispatch, useSelector } from "react-redux";
 import { connect } from 'react-redux'
 import { getAllProperties, getRecommendedProp, getPopularProp } from '../store/property/propertyActions';
 
 // Navigator | DRAWER
 import DrawerNavigator from "./DrawerNavigator";
+// import OnBoardingStackNavigator from "./OnBoardingStackNavigator";
 import AuthStackNavigator from "./AuthStackNavigator";
 
 const Stack = createStackNavigator();
@@ -46,9 +48,11 @@ const MainStackNavigator = ( { selectedProperties, selectedRecommended, selected
     },[data]);
 
     React.useEffect(() => {
-        if(selectedProperties) {
+        if(selectedProperties.length) {
             setAllProperties( selectedProperties )
-            // console.log( selectedProperties )
+        }
+        else{
+            refetch()
         }
         return () => setAllProperties([])
     },[selectedProperties]);

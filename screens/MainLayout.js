@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {
     View,
     TouchableOpacity,
@@ -37,7 +37,7 @@ import Notification from "../screens/Notification/Notification"
 import constants from '../constants/constants';
 import icons from '../constants/icons';
 import images from '../constants/images';
-import { COLORS ,FONTS ,SIZES } from '../constants/theme';
+import { COLORS ,SIZES } from '../constants/theme';
 import Profile from './User/Profile';
 
 const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties, setSelectedTab, setAllProperties, setAllCats, setPopularList, setRecommendedList } ) => {
@@ -61,6 +61,9 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
             setAllCats( data )
             setCategories( data )
         }
+        else{
+            refetch()
+        }
     },[data]);
 
     React.useEffect(() => {
@@ -81,7 +84,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
 
     const progress = useDrawerProgress()
 
-    const flatListRef = useRef()
+    const flatListRef = React.useRef()
 
     // ReAnimated InterPlateNode Properties
     const scale = Animated.interpolateNode( progress, {
@@ -365,25 +368,26 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                     alignItems: 'center'
                 }}
                 title={selectedTab == 'Home' ? 
-                <View
-                    style={{
-                        flex:1,
-                        justifyContent:"center",
-                        alignItems:"center",
-                        height:50
-                    }}
-                >
-                    <Image
-                        source={images.logo_01}
-                        resizeMode='contain'
+                    <View
                         style={{
-                            height:'100%',
-                            tintColor:COLORS.primary,
-                            justifyContent:"flex-end"
+                            flex:1,
+                            justifyContent:"center",
+                            alignItems:"center",
+                            height:50
                         }}
-                    />
-                </View>
-                 : selectedTab?.toUpperCase()}
+                    >
+                        <Image
+                            source={images.logo_01}
+                            resizeMode='contain'
+                            style={{
+                                height:'100%',
+                                tintColor:COLORS.primary,
+                                justifyContent:"flex-end"
+                            }}
+                        />
+                    </View>
+                 : selectedTab?.toUpperCase()
+                }
                 leftComponent={
                     <TouchableOpacity
                         style={{

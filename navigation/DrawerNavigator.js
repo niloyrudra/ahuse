@@ -3,19 +3,20 @@ import { Text, View, TouchableOpacity, Image} from 'react-native'
 import { createDrawerNavigator, DrawerContentScrollView, useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Screens
+
 // Constants
 import constants from '../constants/constants'
 import icons from '../constants/icons'
 import images from '../constants/images'
 import {COLORS, FONTS, SIZES} from '../constants/theme'
-// Components
-import CustomDrawerItem from '../components/CustomDrawerItem'
 
-// Screens
+// Components
 import MainLayout from '../screens/MainLayout'
+import CustomDrawerItem from '../components/CustomDrawerItem'
 import PropertyDetail from '../screens/Property/PropertyDetail'
 import MapScreen from '../screens/Map/MapScreen'
-import SingleMapScreen from '../screens/Map/SingleMapScreen'
+import SingleMapScreen from '../screens/Map/SingleMapScreen';
 ///
 // Redux
 import { connect } from 'react-redux'
@@ -25,52 +26,56 @@ import { userSignOutAction } from '../store/user/userActions'
 
 const Drawer = createDrawerNavigator()
 
-const CustomDrawerContent = ({ navigation, route, selectedTab, setSelectedTab }) => {
-
-    const dispatch = useDispatch();
+const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, setSelectedTab }) => {
+    // console.log(route)
+    
+    const dispatch = useDispatch()
     const [ isLoggedIn, setIsLoggedIn ] = React.useState(false)
     const [ userName, setUserName ] = React.useState('')
 
+    // console.log(selectedToken)
 
     React.useEffect(() => {
-        let mounted = true;
         (async () => {
-            try{
-                const token = await AsyncStorage.getItem('token')
-                const userId = await AsyncStorage.getItem('userId')
-                const username = await AsyncStorage.getItem('username')
-                if( token && userId && username ){
-                    console.log("DRAWER_NAV", username, userId, token)
-                    if( mounted ) {
-                        setIsLoggedIn(true)
-                        setUserName( username )
-                    }
-                }
-                else{
-                    if( mounted ) setIsLoggedIn(false)
-                }
+            const hasToken = await AsyncStorage.getItem("token")
+            const userName = await AsyncStorage.getItem("username")
+            if( hasToken && userName ) {
+                setIsLoggedIn(true)
+                setUserName(userName)
             }
-            catch(err){
+            else {
                 setIsLoggedIn(false)
+                setUserName(userName)
             }
         })()
-        
         return () => {
-            mounted = false
+            setIsLoggedIn(false)
+            setUserName('')
         }
     }, [])
+
+    React.useEffect(() => {
+        if(selectedToken) console.log( "Drawer Token -->>", selectedToken)
+        return () => {
+            setIsLoggedIn(false)
+        }
+    }, [selectedToken])
     
+    // console.log("drawer--",hasToken())
+
     return (
         <DrawerContentScrollView
             scrollEnabled={true}
             contentContainerStyle={{flex:1}}
         >
+            {/* Drawer Body */}
             <View
                 style={{
                     flex:1,
                     paddingHorizontal: SIZES.radius,
                 }}
             >
+                {/* Close */}
                 <View
                     style={{
                         alignItems: 'flex-start',
@@ -96,6 +101,7 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, setSelectedTab })
                     </TouchableOpacity>
                 </View>
 
+                {/* Profile */}
                 <TouchableOpacity
                     style={{
                         flexDirection: "row",
@@ -106,25 +112,49 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, setSelectedTab })
                         if(!userName) return
                         setSelectedTab( constants.screens.profile )
                         navigation.navigate("MainLayout")
-                        
                     }}
                 >
-                    <Image
-                        source={images.profile}
-                        style={{
-                            height: 50,
-                            width: 50,
-                            borderRadius: SIZES.radius
-                        }}
-                    />
-                    <View
-                    style={{marginLeft: SIZES.radius}}>
-                        <Text style={{color: COLORS.white, ...FONTS.h3 }}
-                        >{ userName ? JSON.parse(userName) : 'Ahuse' }</Text>
-                        <Text style={{color:COLORS.white, ...FONTS.body4}}>View your profile</Text>
-                    </View>
+                {
+                    userName ?
+                    <>
+                        <Image
+                            source={images.profile}
+                            resizeMode="contain"
+                            style={{
+                                height: 50,
+                                width: 50,
+                                borderRadius: SIZES.radius
+                            }}
+                        />
+                        <View
+                        style={{marginLeft: SIZES.radius}}>
+                            <Text style={{color: COLORS.white, ...FONTS.h3 }}
+                            >{ JSON.parse(userName) }</Text>
+                            <Text style={{color:COLORS.white, ...FONTS.body4}}>View your profile</Text>
+                        </View>
+                    </>
+                    :
+                    <>
+                        <Image
+                            source={images.logo_01}
+                            resizeMode="contain"
+                            style={{
+                                height: 50,
+                                width: 80,
+                                borderRadius: SIZES.radius
+                            }}
+                        />
+                        <View
+                        style={{marginLeft: SIZES.radius}}>
+                            <Text style={{color: COLORS.white, ...FONTS.h3 }}
+                            >Ahuse</Text>
+                            <Text style={{color:COLORS.white, ...FONTS.body4}}>View your profile</Text>
+                        </View>
+                    </>
+                }
                 </TouchableOpacity>
 
+                {/* Drawer Items */}
                 <View
                     style={{
                         flex:1,
@@ -180,7 +210,8 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, setSelectedTab })
                         }}
                     />
 
-                    <View
+                     {/* Line Divider */}
+                     <View
                         style={{
                             height:1,
                             marginVertical: SIZES.radius,
@@ -189,44 +220,40 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, setSelectedTab })
                         }}
                     />
 
+                    {/* Coupon */}
                     <CustomDrawerItem
                         label="Coupon"
                         icon={icons.coupon}
-                        onPress={() => {
-                            // navigation.navigate("Settings")
-                            console.log("Coupon")
-                        }}
+                        // onPress={() => navigation.navigate("Settings")}
                     />
-
+                    {/* Settings */}
                     <CustomDrawerItem
                         label="Settings"
                         icon={icons.setting}
-                        onPress={() => {
-                            // navigation.navigate("Settings")
-                            console.log("Settings")
-                        }}
+                        // onPress={() => navigation.navigate("Settings")}
                     />
-
+                    {/* Invite friends */}
                     <CustomDrawerItem
                         label="Invite a friend"
                         icon={icons.profile}
-                        onPress={() => console.log("Invite a friend")}
+                        // onPress={() => navigation.navigate("Settings")}
                     />
-
+                    {/* Help Center */}
                     <CustomDrawerItem
                         label="Help Center"
                         icon={icons.help}
-                        onPress={() => console.log("Help Center")}
+                        // onPress={() => navigation.navigate("Settings")}
                     />
 
                 </View>
 
+                {/* Footer */}
                 <View
                     style={{
                         marginBottom: SIZES.padding
                     }}
                 >
-
+                    {/* Logout/SignIn */}
                     { isLoggedIn ?
                         <CustomDrawerItem
                             label="Logout"
@@ -259,7 +286,6 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, setSelectedTab })
 }
 
 const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
-
     return (
         <View
             style={{
@@ -300,7 +326,7 @@ const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
                 <Drawer.Screen name="PropertyDetail">
                     {(props) => <PropertyDetail {...props} />}
                 </Drawer.Screen>
-                                
+                                                
                 <Drawer.Screen name="MapScreen">
                     {(props) => <MapScreen {...props} options={{
                         gestureEnabled:false
@@ -311,22 +337,27 @@ const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
                         gestureEnabled:false
                     }} />}
                 </Drawer.Screen>
+                {/* <Drawer.Screen name="Success" component={Success} options={{
+                        gestureEnabled:false
+                    }} /> */}
 
             </Drawer.Navigator>
         </View>
     )
 }
 
-// export default DrawerNavigator
 function mapStateToProps( state ) {
+    // console.log(state?.userReducer)
     return {
-        selectedTab: state?.tabReducer?.selectedTab?.tabPayload
+        selectedTab: state?.tabReducer?.selectedTab?.tabPayload,
+        selectedToken: state?.userReducer?.token,
     }
 }
 
 function mapDispatchToProps( dispatch ) {
      return {
          setSelectedTab: selectedTab => dispatch( setSelectedTab(selectedTab) )
+        //  setSelectedTab: selectedTab => dispatch( setSelectedTab(selectedTab) )
      }
 }
 
