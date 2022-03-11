@@ -1,6 +1,5 @@
 import React from 'react'
 import { FlatList, Image, Text, View } from 'react-native'
-// import useAxios from 'axios-hooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux'
 import { getAllProperties } from '../../store/property/propertyActions';
@@ -53,12 +52,8 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
         if(selectedProperties && userId)
         {
             const properties = selectedProperties.filter( item => item.publisher_id == userId )
-            // console.log(userId, properties)
             setOwnedProperties( properties )
         }
-        // else {
-        //     //
-        // }
         return () => {
             setOwnedProperties([])
         }
@@ -74,7 +69,6 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
                     <View
                         style={{
                             flex:1,
-                            // height:220,
                             alignItems:"center",
                             justifyContent:"center",
                             paddingHorizontal:SIZES.padding,
@@ -96,13 +90,7 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
                                 <Text style={{color:COLORS.darkGray,...FONTS.h1,marginTop:SIZES.padding}}>Hello! {username}</Text>
                             )
                         }
-                        {/* {
-                            username && displayName == '' && <Text style={{color:COLORS.darkGray,...FONTS.h1,marginTop:SIZES.padding}}>Hi! {username}</Text>
-                        } */}
-                        {/* {
-                            displayName && <Text style={{color:COLORS.darkGray,...FONTS.h1,marginTop:SIZES.padding,marginBottom:SIZES.radius}}>Hello! {displayName}</Text>
-                        } */}
-                        
+        
                         <LineDivider/>
                         
                         <HeaderWithItemNum
@@ -143,7 +131,6 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
                                     height:55,
                                     width:"100%",
                                     borderRadius:SIZES.radius,
-                                    // paddingHorizontal:SIZES.padding
                                 }}
                                 onPress={onSwitch}
                             />
@@ -162,7 +149,6 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
                             marginBottom: SIZES.radius
                         }}
                         imageStyle={{
-                            // marginTop: 20,
                             margin: 10,
                             height:110,
                             width:110,

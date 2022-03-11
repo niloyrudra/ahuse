@@ -24,7 +24,6 @@ const Notification = ({ notification, route }) => {
                     width:'60%',
                     height:'60%',
                     tintColor:COLORS.lightGray1,
-                    // marginBottom:SIZES.padding
                 }}
             />
             <Text style={{color:COLORS.gray2,...FONTS.h3}}>No notifications found! Please come again later.</Text>

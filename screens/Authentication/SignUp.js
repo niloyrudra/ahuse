@@ -55,7 +55,6 @@ const SignUp = ({ navigation, route }) => {
         {
             setIsLoading(true)
             setHasToken(true)
-            // navigation.replace("MainLayout")
             navigation.replace("Home")
         }
     }, [selectLoggedInUser])
@@ -63,7 +62,6 @@ const SignUp = ({ navigation, route }) => {
     React.useEffect(() => {
         if(tempToken){
             setToken(tempToken)
-            console.log(tempToken)
         }
     }, [tempToken])
 
@@ -74,9 +72,7 @@ const SignUp = ({ navigation, route }) => {
     }, [requestStatus])
 
     React.useEffect(() => {
-        // if(selectIsLoading){
-            setIsLoading(selectIsLoading)
-        // }
+        setIsLoading(selectIsLoading)
     }, [selectIsLoading])
 
     // Handler
@@ -97,7 +93,6 @@ const SignUp = ({ navigation, route }) => {
             title="Let's Sign you up"
             subtitle="Create an account to continue."
         >
-            {/* Skip To Home Screen */}
             <SkipTextButton onPress={() => navigation.navigate("Home") } />
 
             <View
@@ -107,12 +102,9 @@ const SignUp = ({ navigation, route }) => {
                 }}
             >
 
-                {/* Form Input Section */}
-                {/* Username */}
                 <FormInput
                     label="Username"
                     keyboardType='default'
-                    // autoCompleteType='email'
                     onChange={(value) => {
                         // Validate Username
                         utils.validateUsername(value, setUsernameError)
@@ -140,13 +132,12 @@ const SignUp = ({ navigation, route }) => {
                         </View>
                     }
                 />
-                {/* Email */}
+
                 <FormInput
                     label="Email"
                     keyboardType='email-address'
                     autoCompleteType='email'
                     onChange={(value) => {
-                        // Validate Email
                         utils.validateEmail(value, setEmailError)
 
                         setEmail(value)
@@ -169,7 +160,7 @@ const SignUp = ({ navigation, route }) => {
                         </View>
                     }
                 />
-                {/* Password */}
+
                 <FormInput
                     label="Password"
                     autoCompleteType='password'
@@ -178,7 +169,6 @@ const SignUp = ({ navigation, route }) => {
                         marginTop: SIZES.radius
                     }}
                     onChange={(value) => {
-                        // Validate Password
                         utils.validatePassword(value, setPasswordError)
 
                         setPassword(value)
@@ -205,7 +195,6 @@ const SignUp = ({ navigation, route }) => {
                     }
                 />
 
-                {/* Sign up section */}
                 <TextButton
                     label={isLoading ? "Processing..." : "Sign Up"}
                     disabled={!isEnableSignIn()}
@@ -216,11 +205,10 @@ const SignUp = ({ navigation, route }) => {
                         borderRadius: SIZES.radius,
                         backgroundColor: !isEnableSignIn() ? COLORS.transparentPrimray : COLORS.primary
                     }}
-                    // onPress={() => navigation.navigate("Otp", { email: email })}
+
                     onPress={signUpHandler}
                 />
 
-                {/* Sign Up section */}
                 <View
                     style={{
                         flexDirection:"row",
@@ -233,9 +221,7 @@ const SignUp = ({ navigation, route }) => {
                             color:COLORS.darkGray,
                             ...FONTS.body3
                         }}
-                    >
-                        Already have an account?
-                    </Text>
+                    >Already have an account?</Text>
 
                     <TextButton
                         label="Sign In"
@@ -252,14 +238,14 @@ const SignUp = ({ navigation, route }) => {
 
                 </View>
 
-                {/* Footer */}
+
                 <View
                     style={{
                         flex:1,
                         justifyContent:"flex-end"
                     }}
                 >
-                    {/* FaceBook */}
+
                     <TextIconButton
                         label="Continue With Facebook"
                         icon={icons.fb}
@@ -279,7 +265,7 @@ const SignUp = ({ navigation, route }) => {
                         }}
                         onPress={() => console.log("Facebook")}
                     />
-                    {/* Google */}
+
                     <TextIconButton
                         label="Continue With Google"
                         icon={icons.google}

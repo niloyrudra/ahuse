@@ -34,7 +34,7 @@ const setNewProperty = ( newProperty ) => {
 }
 export const insertNewProperty = ( data, token, setIsLoading, setRequestStatus ) => {
 
-    console.log("Inserting Property...",token)
+    // console.log("Inserting Property...",token)
     return dispatch => {
         fetch( `${constants.ROOT_URL}/ahuse/api/v1/properties/add`, {
             method: 'POST',
@@ -48,11 +48,11 @@ export const insertNewProperty = ( data, token, setIsLoading, setRequestStatus )
         .then(res => res.json())
         .then( resData => {
 
-            console.log("Insertion done!",resData);
+            // console.log("Insertion done!",resData);
             
             if( resData.success )
             {
-                console.log('Success - ', resData);
+                // console.log('Success - ', resData);
                 dispatch( setNewProperty(resData.data) );
                 setRequestStatus({
                     success:true,
@@ -145,7 +145,7 @@ const setAllRefetchPropertyData = ( reFetchedData ) => {
         payload: reFetchedData
     }
 }
-const getAllRefetchPropertyData = () => {
+export const getAllRefetchPropertyData = () => {
     return async (dispatch) => {
         try {
             const userId = await AsyncStorage.getItem( "userId" );

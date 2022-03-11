@@ -3,7 +3,7 @@ import { Platform, Text, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Location from 'expo-location';
 import { FONTS } from '../constants/theme';
-import constants from '../constants/constants';
+// import constants from '../constants/constants';
 
 const UserLocation = ({containerStyle, labelStyle}) => {
     const [location, setLocation] = useState(null);
@@ -26,13 +26,9 @@ const UserLocation = ({containerStyle, labelStyle}) => {
               latitude,
               longitude
             });
-
-            // console.log("address response",response);
         
             for (let item of response) {
-              let address = `${item.street}, ${item.postalCode}, ${item.city}`.replace(/[\"]/g,"");
-              // let address = `${item.name}, ${item.street}, ${item.postalCode}, ${item.city}`;
-        
+              let address = `${item.street}, ${item.postalCode}, ${item.city}`.replace(/[\"]/g,"");      
               setLocation(address);
             }
           }

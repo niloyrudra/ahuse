@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { Text, View, TouchableOpacity, Image } from 'react-native'
 import constants from '../constants/constants';
 
 // Constants
@@ -21,9 +21,8 @@ const VerticalCard = ( { containerStyle, item, imageStyle, onPress } ) => {
             }}
             onPress={onPress}
         >
-            {/* Category & Favourite */}
             <View style={{ flexDirection:"row" }}>
-                {/* Category */}
+
                 <View
                     style={{
                         flexDirection:"row",
@@ -41,7 +40,7 @@ const VerticalCard = ( { containerStyle, item, imageStyle, onPress } ) => {
                         {item?.cat_names[0]}
                     </Text>
                 </View>
-                {/* Favourite */}
+
                 <Image
                     source={icons.love}
                     style={{
@@ -52,20 +51,18 @@ const VerticalCard = ( { containerStyle, item, imageStyle, onPress } ) => {
                 />
             </View>
 
-            {/* Image */}
             <Image
                 source={{uri:item.thumbnail}}
                 style={imageStyle}
             />
 
-            {/* Info */}
             <View
                 style={{
                     flex:1,
                     alignItems:"center"
                 }}
             >
-                {/* Title */}
+
                 <Text
                     style={{
                         ...FONTS.h3,
@@ -73,7 +70,7 @@ const VerticalCard = ( { containerStyle, item, imageStyle, onPress } ) => {
                         textAlign:"center"
                     }}
                 >{item?.title}</Text>
-                {/* Address */}
+
                 <Text
                     style={{
                         color: COLORS.darkGray2,
@@ -82,8 +79,6 @@ const VerticalCard = ( { containerStyle, item, imageStyle, onPress } ) => {
                     }}
                 >{item?.address}</Text>
 
-                {/* Price */}
-                {/* <NumberFormat/> */}
                 <Text
                     style={{
                         marginTop: SIZES.radius,
@@ -98,5 +93,3 @@ const VerticalCard = ( { containerStyle, item, imageStyle, onPress } ) => {
 }
 
 export default VerticalCard
-
-const styles = StyleSheet.create({})

@@ -2,9 +2,9 @@ import React from 'react'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import constants from '../../constants/constants'
+// import constants from '../../constants/constants'
 import images from '../../constants/images'
-import icons from '../../constants/icons'
+// import icons from '../../constants/icons'
 import {COLORS,FONTS,SIZES} from '../../constants/theme'
 
 const AuthLayout = ({ title, subtitle, titleContainerStyle, children }) => {
@@ -24,7 +24,7 @@ const AuthLayout = ({ title, subtitle, titleContainerStyle, children }) => {
                     paddingHorizontal:SIZES.padding
                 }}
             >
-                {/* App LOGO */}
+
                 <View
                     style={{
                         alignItems:"center"
@@ -34,8 +34,6 @@ const AuthLayout = ({ title, subtitle, titleContainerStyle, children }) => {
                         source={images.logo_01}
                         resizeMode='contain'
                         style={{
-                            // width: 100,
-                            // height:100,
                             width: SIZES.width * 0.5,
                             height:100,
                             tintColor:COLORS.primary,
@@ -44,7 +42,6 @@ const AuthLayout = ({ title, subtitle, titleContainerStyle, children }) => {
                     />
                 </View>
 
-                {/* Title & Sub title */}
                 <View
                     style={{
                         marginTop:SIZES.padding,
@@ -72,7 +69,6 @@ const AuthLayout = ({ title, subtitle, titleContainerStyle, children }) => {
                     </Text>
                 </View>
 
-                {/* Children / Content */}
                 {children}
 
             </KeyboardAwareScrollView>

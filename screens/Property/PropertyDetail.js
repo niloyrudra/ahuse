@@ -95,7 +95,6 @@ const PropertyDetail = ({navigation, route}) => {
                     paddingHorizontal:SIZES.padding
                 }}
             >
-                {/* Property Card */}
                 <View
                     style={{
                         height: 190,
@@ -103,7 +102,7 @@ const PropertyDetail = ({navigation, route}) => {
                         backgroundColor: COLORS.lightGray2
                     }}
                 >
-                    {/* Category & Favourite */}
+
                     <View
                         style={{
                             flexDirection:"row",
@@ -112,17 +111,14 @@ const PropertyDetail = ({navigation, route}) => {
                             paddingHorizontal:SIZES.radius
                         }}
                     >
-                        {/* Category */}
                         <View
                             style={{
-                                // flexDirection:"row",
                                 flex:1,
                             }}
                         >
                             {renderCategories()}
                         </View>
 
-                        {/* Favourite */}
                         <Image
                             source={icons.love}
                             style={{
@@ -134,7 +130,6 @@ const PropertyDetail = ({navigation, route}) => {
 
                     </View>
 
-                    {/* Banner Image */}
                     <View
                         style={{
                             flex:1,
@@ -147,7 +142,6 @@ const PropertyDetail = ({navigation, route}) => {
                             source={{uri:property.thumbnail}}
                             resizeMode='cover'
                             style={{
-                                // height:170,
                                 height:'100%',
                                 width:'100%',
                             borderRadius:SIZES.radius
@@ -157,13 +151,11 @@ const PropertyDetail = ({navigation, route}) => {
 
                 </View>
 
-                {/* Property info */}
                 <View
                     style={{
                         marginTop:SIZES.padding
                     }}
                 >
-                    {/* Title */}
                     <Text
                         style={{
                             ...FONTS.h1
@@ -171,13 +163,9 @@ const PropertyDetail = ({navigation, route}) => {
                     >
                         { property?.title }
                     </Text>
-                    {/* Address */}
                     <View
                         style={{
-                            // flex:1,
                             flexDirection:"row",
-                            // alignItems:"center",
-                            // justifyContent:"flex-end"
                         }}
                     >
                         <Image
@@ -199,10 +187,8 @@ const PropertyDetail = ({navigation, route}) => {
                         </Text>
                     </View>
 
-                    {/* Type */}
                     {renderTypes()}
 
-                    {/* Description */}
                     <Text
                         style={{
                             marginTop:SIZES.base,
@@ -232,7 +218,6 @@ const PropertyDetail = ({navigation, route}) => {
                         style={{
                             flexDirection:"row",
                             alignItems:"center",
-                            // marginTop: 10
                         }}
                     >
                         <Image
@@ -311,7 +296,6 @@ const PropertyDetail = ({navigation, route}) => {
     }
 
     const renderMap = () => {
-        
         return (
             <TouchableOpacity 
                 style={{
@@ -353,16 +337,10 @@ const PropertyDetail = ({navigation, route}) => {
                 style={{
                     flex:1,
                     flexDirection:"row",
-                    // flexWrap:'wrap',
                     alignItems:'flex-end',
                     justifyContent:'space-around',
                     marginTop:SIZES.radius,
-                    // paddingVertical: SIZES.radius,
-                    paddingHorizontal: SIZES.padding,
-                    // borderTopWidth:1,
-                    // borderBottomWidth:1,
-                    // borderColor: COLORS.lightGray1,
-
+                    paddingHorizontal: SIZES.padding
                 }}
             >
                 {
@@ -372,7 +350,6 @@ const PropertyDetail = ({navigation, route}) => {
                             flexDirection:"row",
                             alignItems:'flex-end',
                             justifyContent:'flex-end',
-                            // paddingRight:SIZES.padding
                         }}
                     >
                         <Image
@@ -394,7 +371,6 @@ const PropertyDetail = ({navigation, route}) => {
                             flexDirection:"row",
                             alignItems:'flex-end',
                             justifyContent:'flex-end',
-                            // marginRight:SIZES.padding,
                             paddingHorizontal: SIZES.radius,
                             borderLeftWidth:1,
                             borderRightWidth:1,
@@ -484,20 +460,7 @@ const PropertyDetail = ({navigation, route}) => {
                     paddingBottom:SIZES.radius
                 }}
             >
-                {/* Stepper Input */}
-                {/* <StepperInput
-                    value={quantity}
-                    // containerStyle={{}}
-                    onMinus={() => {
-                        if( quantity > 1 ){
-                            setQuantity(quantity-1)
-                        }
-                    }}
-                    onAdd={() => setQuantity(quantity+1)}
-                /> */}
-                {/* Contact */}
                 <TextIconButton
-                    // label="Mail Us"
                     label="E-mail"
                     icon={icons.envelope}
                     iconPosition="right"
@@ -507,7 +470,6 @@ const PropertyDetail = ({navigation, route}) => {
                         justifyContent:"center",
                         height:60,
                         marginLeft:SIZES.radius,
-                        // paddingHorizontal:SIZES.padding * 1.25,
                         paddingHorizontal:SIZES.padding,
                         borderRadius:SIZES.radius,
                         backgroundColor:COLORS.darkGray
@@ -519,9 +481,7 @@ const PropertyDetail = ({navigation, route}) => {
                     onPress={sendFeedback}
                 />
 
-                {/* Button */}
                 <TextButton
-                    // label="Buy Now"
                     label=""
                     label2={property?.price ? `Price: ${constants.currency}${utils.thousandSeparator(property?.price)}` : `Price:  ${constants.currency}00.00`}
                     labelStyle={{
@@ -535,18 +495,11 @@ const PropertyDetail = ({navigation, route}) => {
                     buttonContainerStyle={{
                         flex:1,
                         flexDirection:"row",
-                        // alignItems:"center",
-                        // justifyContent:"center",
                         height:60,
                         marginLeft:SIZES.radius,
-                        // paddingHorizontal:SIZES.radius,
-                        // paddingHorizontal:SIZES.padding,
-                        // borderRadius:SIZES.radius,
-                        // backgroundColor:COLORS.darkGray
                         backgroundColor:COLORS.transparent,
                         border:"none"
                     }}
-                    // onPress={}
                 />
 
             </View>
@@ -593,7 +546,6 @@ const PropertyDetail = ({navigation, route}) => {
                  ...animatedStyle
             }}
         >
-            {/* Header */}
             <Header
                 containerStyle={{
                     height:50,
@@ -601,7 +553,6 @@ const PropertyDetail = ({navigation, route}) => {
                     marginTop: 40,
                     alignItems: 'center'
                 }}
-                // title={property ? property?.title?.toUpperCase() : 'DETAIL'}
                 title='DETAIL'
                 leftComponent={
                     <TouchableOpacity
@@ -644,7 +595,6 @@ const PropertyDetail = ({navigation, route}) => {
                             style={{
                                 width:20,
                                 height:20,
-                                // tintColor: ( isFav && favProps.length && favProps.includes(property.id) ) ? COLORS.primary : COLORS.gray
                                 tintColor: ( isFav || property.is_fav ) ? COLORS.primary : COLORS.gray
                             }}
                         />
@@ -652,25 +602,18 @@ const PropertyDetail = ({navigation, route}) => {
                 }
             />
 
-            {/* Body */}
             <ScrollView>
 
-                {/* Property Detail */}
                 {renderDetail()}
 
-                {/* Line Devider */}
                 <LineDivider/>
 
-                {/* Rooms Detail */}
                 {renderRoomsQuantity()}
 
-                {/* Map */}
                 {renderMap()}
 
-                {/* Features */}
                 {renderSectionHeader("Features")}
 
-                {/* Features */}
                 <View
                     style={{
                         flex:1,
@@ -690,18 +633,15 @@ const PropertyDetail = ({navigation, route}) => {
                                 }}
                                 key={`${index}`}
                             >
-                                {/* Name */}
                                 <View
                                     style={{
                                         flex:1,
-                                        // paddingHorizontal:20,
                                         justifyContent:"center"
                                     }}
                                 >
                                     <Text style={{ ...FONTS.body4, color:COLORS.gray }}>{item.toUpperCase()}</Text>
                                 </View>
 
-                                {/* Icon */}
                                 <Image
                                     source={icons.correct}
                                     style={{
@@ -716,11 +656,8 @@ const PropertyDetail = ({navigation, route}) => {
                 </View>
 
             </ScrollView>
-
-            {/* Line Devider */}
             <LineDivider/>
             
-            {/* Render Footer */}
             {renderFooter()}
 
         </Animated.View>

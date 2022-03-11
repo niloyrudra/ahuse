@@ -61,7 +61,6 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
             setAllCats( data )
             setCategories( data )
         }
-        // return () => setAllCats([])
     },[data]);
 
     React.useEffect(() => {
@@ -200,7 +199,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
     } )
 
     React.useEffect(() => {
-        // console.log( "Current Time: ", Date.now() )
+
         let mounted1 = true;
         let mounted = true;
         (async() => {
@@ -357,7 +356,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                  ...animatedStyle
             }}
         >
-            {/* Header */}
+
             <Header
                 containerStyle={{
                     height:50,
@@ -378,12 +377,8 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                         source={images.logo_01}
                         resizeMode='contain'
                         style={{
-                            // width: 100,
-                            // height:100,
-                            // width: SIZES.width * 0.4,
                             height:'100%',
                             tintColor:COLORS.primary,
-                            // marginTop:20
                             justifyContent:"flex-end"
                         }}
                     />
@@ -412,7 +407,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                 }
             />
 
-            {/* Content */}
+
             <View
                 style={{
                     flex:1
@@ -456,7 +451,6 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
             </View>
 
 
-            {/* Footer */}
             <View
                 style={{
                     height:100,
@@ -464,7 +458,6 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                     position:"relative"
                 }}
             >
-                {/* Shadow */}
                 <LinearGradient
                     start={{ x:0, y:0 }}
                     end={{ x:0, y:4 }}
@@ -476,14 +469,13 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                         position:"absolute",
                         left:0,
                         right:0,
-                        top:-20,// -20
+                        top:-20,
                         height:20,
                         borderTopLeftRadius:15,
                         borderTopRightRadius:15,
                     }}
                 />
 
-                {/* Tabs */}
                 <View
                     style={{
                         flex:1,
@@ -492,10 +484,9 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                         paddingBottom:5,
                         borderTopLeftRadius:20,
                         borderTopRightRadius:20,
-                        // backgroundColor: COLORS.white
                     }}
                 >
-                    {/* Home Tab */}
+
                     <TabButton
                         label={constants.screens.home}
                         icon={icons.home}
@@ -504,7 +495,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                         innerContainerStyles={homeColorStyle}
                         onPress={() => setSelectedTab( constants.screens.home )}
                     />
-                    {/* Search Tab */}
+
                     <TabButton
                         label={constants.screens.search}
                         icon={icons.search}
@@ -513,7 +504,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                         innerContainerStyles={searchColorStyle}
                         onPress={() => setSelectedTab( constants.screens.search )}
                     />
-                    {/* Add Property Tab */}
+
                     <TabButton
                         label={constants.screens.addProp}
                         icon={icons.plus}
@@ -522,7 +513,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                         innerContainerStyles={addPropColorStyle}
                         onPress={() => setSelectedTab( constants.screens.addProp )}
                     />
-                    {/* Favourite Tab */}
+
                     <TabButton
                         label={constants.screens.favourite}
                         icon={icons.favourite}
@@ -531,7 +522,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                         innerContainerStyles={favouriteColorStyle}
                         onPress={() => setSelectedTab( constants.screens.favourite )}
                     />
-                    {/* Notification Tab */}
+
                     <TabButton
                         label={constants.screens.notification}
                         icon={icons.notification}
@@ -541,7 +532,6 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                         onPress={() => setSelectedTab( constants.screens.notification )}
                     />
 
-                    {/* Profile Tab */}
                     {
                         isLoggedIn &&
                             <TabButton

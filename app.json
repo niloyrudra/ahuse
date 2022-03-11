@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "ahuse-rn-app",
-    "slug": "ahuse-rn-app",
+    "name": "Ahuse",
+    "slug": "ahuseApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/Ahuse_splash.png",
     "splash": {
       "image": "./assets/images/Ahuse_splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ff0"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -20,9 +20,10 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "ahuse.co.uk.ahuseapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/Ahuse_splash.png",
-        "backgroundColor": "#ff0"
+        "backgroundColor": "#ffffff"
       }
     },
     "web": {

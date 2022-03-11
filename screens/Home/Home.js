@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import {
     View,
     Text,
@@ -10,14 +10,10 @@ import {
     Switch
 } from 'react-native';
 
-// import useAxios from 'axios-hooks';
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 import { connect } from 'react-redux'
-import { getAllCats, getAllTaxData } from '../../store/property/propertyActions';
+import { getAllCats, getAllTaxData, getAllRefetchPropertyData } from '../../store/property/propertyActions';
 
 // Constants
-// import constants from '../../constants/constants';
 import icons from '../../constants/icons';
 import { COLORS ,FONTS ,SIZES } from '../../constants/theme';
 
@@ -37,9 +33,10 @@ import SearchModal from './SearchModal';
 const Home = ( { navigation, allProperties, setAllCats } ) => {
 
     let searchQueryTimeout;
-    const searchRef = useRef()
+    const searchRef = React.useRef()
 
     const dispatch = useDispatch()
+
     React.useEffect(() => dispatch( getAllTaxData() ), []);
     const allTaxData = useSelector( state => state.propertyReducer.allTax )
 
@@ -82,12 +79,16 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
     },[catTaxonomies])
 
     React.useEffect(() => {
-        setRecommendedProperty(allProperties.filter( i => i.recommended == 1 ))
+        if( allProperties.length > 0 ) {
+            setRecommendedProperty(allProperties.filter( i => i.recommended == 1 ))
+        }
+        else {
+            dispatch( getAllRefetchPropertyData() )
+        }
     },[allProperties])
 
     React.useEffect(() => {
         setTypeId(typeTaxonomies[0]?.id)
-        // if(allProperties.length) setPropertiesByType(allProperties.filter( i => i.cad_ids.includes( typeTaxonomies[0]?.id ) ))
         if(allProperties.length) setPropertiesByType(allProperties.filter( i => i.cad_ids == typeTaxonomies[0]?.id ))
     },[typeTaxonomies])
 
@@ -144,7 +145,7 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                         backgroundColor: COLORS.lightGray2
                     }}
                 >
-                    {/* Icon */}
+
                     <Image
                         source={icons.search}
                         style={{
@@ -154,7 +155,6 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                         }}
                     />
 
-                    {/* Text Input */}
                     <TextInput
                         ref={searchRef}
                         style={{
@@ -162,10 +162,8 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                             marginLeft:SIZES.radius,
                             ...FONTS.body3
                         }}
-                        // value={searchQuery}
                         placeholder="Search Properties"
                         onChangeText={(value) => {
-                            // setSearchQuery(value)
                             clearTimeout(searchQueryTimeout)
                             searchQueryTimeout = setTimeout(() => {
                                 let data = []
@@ -173,7 +171,7 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                                 if(searchRef.current.length == 0) return
                                 if(allProperties)
                                 {
-                                    // console.log(searchModelRef.current)
+
                                     const type = isSales ? 'Sales' : (isRental ? 'Rentals': '');
                                     if(type != ''){
                                         data = allProperties.filter( item => item.cad_names.includes( type ) && ( item.address.toLowerCase().includes( value.toLowerCase() ) || item.title.toLowerCase().includes( value.toLowerCase() ) ))
@@ -193,7 +191,6 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                         }}
                     />
 
-                    {/* Filter Button */}
                     <TouchableOpacity
                         onPress={() => {
                             searchRef.current = ''
@@ -215,13 +212,10 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
 
                 <View
                     style={{
-                        // flex:1,
                         flexDirection:"row",
                         justifyContent:'space-between',
                         alignItems:"center",
                         height:40,
-                        // borderBottomWidth:1,
-                        // borderBottomColor:COLORS.lightGray,
                         paddingBottom:10
                     }}
                 >
@@ -234,7 +228,7 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                     >
                         <Switch
                             trackColor={{ false: COLORS.gray3, true: COLORS.primary }}
-                            thumbColor={isSales ? COLORS.primary : "#f4f3f4"} // "#81b0ff"
+                            thumbColor={isSales ? COLORS.primary : "#f4f3f4"}
                             onValueChange={ val => {
                                 setIsRental(!val)
                                 setIsSales(val)
@@ -253,7 +247,7 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                     >
                         <Switch
                             trackColor={{ false: COLORS.gray3, true: COLORS.primary }}
-                            thumbColor={isRental ? COLORS.primary : "#f4f3f4"} // "#81b0ff"
+                            thumbColor={isRental ? COLORS.primary : "#f4f3f4"}
                             onValueChange={ val => {
                                 setIsSales(!val)
                                 setIsRental(val)
@@ -296,11 +290,9 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                         color: COLORS.primary,
                         ...FONTS.body3
                     }}
-                >
-                    YOUR LOCATION
-                </Text>
-            </View>
+                >YOUR LOCATION</Text>
 
+            </View>
                 <UserLocation
                     containerStyle={{
                         flexDirection: 'row',
@@ -311,34 +303,6 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                         ...FONTS.h3
                     }}
                 />
-
-                {/* <TouchableOpacity
-                    style={{
-                        flexDirection: 'row',
-                        marginTop:SIZES.base,
-                        alignItems: "center"
-                    }}
-                    // onPress={() => navigation.navigate( "MapScreen" )}
-                >
-                    <Text 
-                        style={{
-                            ...FONTS.h3
-                        }}
-                    >
-                        {myProfile?.address}
-                    </Text>
-
-                    <Image
-                        source={icons.down_arrow}
-                        style={{
-                            marginLeft: SIZES.base,
-                            height: 20,
-                            width:  20,
-                            tintColor: COLORS.primary
-                        }}
-                    />
-                </TouchableOpacity> */}
-
             </View>
         )
     }
@@ -347,7 +311,6 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
         return (
             <FlatList
                 horizontal
-                // data={selectedCats}
                 data={catTaxonomies}
                 keyExtractor={item => `${item.id}`}
                 showsHorizontalScrollIndicator={false}
@@ -358,12 +321,10 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                 renderItem={ ( { item, index } ) => (
                     <TouchableOpacity
                         style={{
-                            // flexDirection: "row",
                             flex:1,
                             height: 55,
                             marginTop: SIZES.padding,
                             marginLeft: index == 0 ? SIZES.padding : SIZES.radius,
-                            // marginRight: index == selectedCats.length - 1 ? SIZES.padding : 0,
                             marginRight: index == catTaxonomies.length - 1 ? SIZES.padding : 0,
                             paddingHorizontal: 8,
                             borderRadius: SIZES.radius,
@@ -425,24 +386,19 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
         )
     }
 
-
-
     return (
-
         <View
             style={{
                 flex:1
             }}
         >
-            {/* Search Section */}
+
             {renderSearch()}
             
-            {/* Filter Section */}
-            {/* Modal */}
             {showFilterModal &&
                 <FilterModal
                     refEle={searchRef}
-                    data={properties}
+                    data={allProperties}
                     isVisible={showFilterModal}
                     catList={catTaxonomies}
                     typeList={typeTaxonomies}
@@ -458,11 +414,20 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                     navigation={navigation}
                     isVisible={showSearchResultModal}
                     searchResultData={ searchResultData }
-                    // query={ typeof searchRef.current !== 'object' ? searchRef.current : ''}
                     query={searchQuery}
                     onClose={() => setShowSearchResultModal(false)}
                 />
             }
+            {/* {showSearchResultModal &&
+                <SearchModal
+                    refEle={searchRef}
+                    navigation={navigation}
+                    isVisible={showSearchResultModal}
+                    searchResultData={ searchResultData }
+                    query={searchQuery}
+                    onClose={() => setShowSearchResultModal(false)}
+                />
+            } */}
 
             {
                 isLoading
@@ -473,27 +438,21 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                         color={COLORS.primary}
                     />
                     :
-                    //List
+
                     <FlatList
-                        // data={allProperties}
                         data={propertiesByType}
                         keyExtractor={item => `${item.id}`}
                         showsVerticalScrollIndicator={false}
                         ListHeaderComponent={
                             <View>
-                                {/* Top Location */}
                                 {renderLocationSection()}
 
-                                {/* Categories */}
                                 {renderCatSection()}
 
-                                {/* Popular Section */}
                                 <PopularSection navigation={navigation} data={recommendedProperty} catId={selectedCategoryId} />
 
-                                {/* Recommended Section */}
                                 <RecommendedSection navigation={navigation} data={recommendedProperty} catId={selectedCategoryId} />
 
-                                {/* Types */}
                                 {renderTypes()}
 
                             </View>
@@ -507,7 +466,6 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                                         marginBottom: SIZES.radius
                                     }}
                                     imageStyle={{
-                                        // marginTop: 20,
                                         margin: 10,
                                         height:110,
                                         width:110,
@@ -524,28 +482,19 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                     />
             }
 
-
-
         </View>
     )
 }
 
 function mapStateToProps( state ) {
-
     return {
-        // selectedProperties: state?.propertyReducer?.allProperties,
-        selectedCats: state?.propertyReducer?.allCategories,
-        // selectedPopular: state?.propertyReducer?.popular,
-        // selectedRecommended: state?.propertyReducer?.recommended,
+        selectedCats: state?.propertyReducer?.allCategories
     }
 }
 
 function mapDispatchToProps( dispatch ) {
     return {
-        // setAllProperties: selectedProperties => dispatch( getAllProperties( selectedProperties ) ),
-        setAllCats: selectedCats => dispatch( getAllCats( selectedCats ) ),
-        // setPopularList: selectedPopular => dispatch( getPopularProp( selectedPopular ) ),
-        // setRecommendedList: selectedRecommended => dispatch( getRecommendedProp( selectedRecommended ) ),
+        setAllCats: selectedCats => dispatch( getAllCats( selectedCats ) )
     }
 }
 

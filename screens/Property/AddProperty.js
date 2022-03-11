@@ -3,8 +3,6 @@ import { Text, View, StyleSheet, FlatList, Image, Alert } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useForm, Controller } from 'react-hook-form';
 
-// import { getAllRefetchPropertyData } from '../../store/property/propertyActions';
-
 // Constants
 import { COLORS, FONTS, SIZES } from '../../constants/theme';
 import constants from '../../constants/constants';
@@ -45,7 +43,7 @@ const AddProperty = ({ navigation, route }) => {
         msg:''
     });
 
-    const user_Id = useSelector( state => state.userReducer?.userId )
+    // const user_Id = useSelector( state => state.userReducer?.userId )
 
     React.useEffect(() => {
         let mounted = true;
@@ -53,8 +51,8 @@ const AddProperty = ({ navigation, route }) => {
                 try{
                     const token = await AsyncStorage.getItem('token')
                     const userId = await AsyncStorage.getItem('userId')
-                    console.log("ADD_LISTING",userId,token)
-                    if(token || userId){
+                    if(token && userId){
+                        console.log("ADD_LISTING", userId, token)
                         // console.log(token)
                         if( mounted ){
                             setUserId(userId)
@@ -169,42 +167,36 @@ const AddProperty = ({ navigation, route }) => {
     
     React.useEffect(() => {
         if(selectedStatus){
-            // console.log((selectedStatus))
             setPropertyStatus(selectedStatus)
         }
     }, [selectedStatus])
     
     React.useEffect(() => {
         if(selectedCity){
-            // console.log((selectedCity))
             setCity(selectedCity)
         }
     }, [selectedCity])
     
     React.useEffect(() => {
         if(selectedCountyState){
-            // console.log((selectedCountyState))
             setCountyState(selectedCountyState)
         }
     }, [selectedCountyState])
     
     React.useEffect(() => {
         if(selectedArea){
-            // console.log((selectedArea))
             setArea(selectedArea)
         }
     }, [selectedArea])
     
     React.useEffect(() => {
         if(selectedCategories){
-            // console.log((selectedCategories))
             setCategories(selectedCategories)
         }
     }, [selectedCategories])
 
     React.useEffect(() => {
         if(selectedTypes){
-            // console.log((selectedTypes))
             setTypeOrActionCat(selectedTypes)
         }
     }, [selectedTypes])
@@ -217,7 +209,6 @@ const AddProperty = ({ navigation, route }) => {
 
     // Submit Handler
     const onSubmit = data => {
-        // console.log(userId)
         if(!userId) {
             Alert.alert(
                 "Warning!",
@@ -226,7 +217,6 @@ const AddProperty = ({ navigation, route }) => {
                     {
                         text: "Login",
                         onPress: () => navigation.navigate("Auth"),
-                        // style: "Ok"
                     },
                     {
                         text: "Cancel",
@@ -249,8 +239,6 @@ const AddProperty = ({ navigation, route }) => {
         }
     };
 
-    // const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0
-
     return (
         <KeyboardAwareScrollView
             keyboardDismissMode='on-drag'
@@ -263,16 +251,7 @@ const AddProperty = ({ navigation, route }) => {
                 paddingBottom: 20
             }}
         >   
-        {/* // <KeyboardAvoidingView
-        //     behavior={Platform.OS === "ios" ? "padding" : "height"}
-        //     keyboardVerticalOffset={keyboardVerticalOffset}
-        //     style={{
-        //         flex:1,
-        //         backgroundColor:COLORS.white,
-        //     }}
-        // > */}
             <>
-                {/* TITLE */}
                 <TextInputComponent
                     name="title"
                     placeholder="Property Title"
@@ -282,7 +261,6 @@ const AddProperty = ({ navigation, route }) => {
                     errorMsg="Title is required"
                 />
 
-                {/* DESCRIPTION */}
                 <TextInputComponent
                     name="content"
                     placeholder="Property description"
@@ -300,21 +278,20 @@ const AddProperty = ({ navigation, route }) => {
                     }}
                 />
 
-                {/* CATEGORY */}
                 <PickerComponent
                     name="category"
                     label="Category"
                     optionList={categories}
                     control={control}
                 />
-                {/* TYPES */}
+
                 <PickerComponent
                     name="action_category"
                     label="Types"
                     optionList={typeOrActionCat}
                     control={control}
                 />
-                {/* PROPERTY STATUS */}
+
                 <PickerComponent
                     name="propertyStatus"
                     label="Property Status"
@@ -322,7 +299,6 @@ const AddProperty = ({ navigation, route }) => {
                     control={control}
                 />
 
-                {/* MEDIA STARTS */}
                 <Text style={{...styles.header, marginBottom:10}}>Upload Image</Text>
                 <Controller
                     control={control}
@@ -331,9 +307,7 @@ const AddProperty = ({ navigation, route }) => {
                     )}
                     name="imageUri"
                 />
-                {/* MEDIA EDNS */}
 
-                {/* ADDRESS */}
                 <Text style={{...styles.header, marginBottom:10}}>Select your address</Text>
                 <Controller
                     control={control}
@@ -351,25 +325,24 @@ const AddProperty = ({ navigation, route }) => {
                     }}
                 >{errors.address.message}</Text>}
                 
-                {/* COUNTY */}
                 <PickerComponent
                     name="county_state"
                     label="County or State"
                     optionList={countyState}
                     control={control} />
-                {/* CITY */}
+
                 <PickerComponent
                     name="city"
                     label="City"
                     optionList={city}
                     control={control} />
-                {/* NEIGHBORHOOD */}
+
                 <PickerComponent
                     name="neighborhood"
                     label="Neighborhood"
                     optionList={area}
                     control={control} />
-                {/* ZIP */}
+
                 <Text style={styles.label}>Postal/Zip Code</Text>
                 <TextInputComponent
                     name="zip"
@@ -380,10 +353,7 @@ const AddProperty = ({ navigation, route }) => {
                     errorMsg=""
                 />
 
-                {/* ********************************** */}
-                {/* PRICE */}
                 <Text style={styles.header}>Price Details</Text>
-                {/* PRICE */}
                 <TextInputComponent
                     name="price"
                     kbType="numeric"
@@ -392,7 +362,7 @@ const AddProperty = ({ navigation, route }) => {
                     control={control}
                     errors={errors} errorMsg=""
                 />
-                {/* BEFORE PRICE LABEL */}
+
                 <TextInputComponent
                     name="beforePrice"
                     kbType=""
@@ -401,7 +371,7 @@ const AddProperty = ({ navigation, route }) => {
                     control={control}
                     errors={errors} errorMsg=""
                 />
-                {/* AFTER PRICE LABEL */}
+
                 <TextInputComponent
                     name="afterPrice"
                     kbType=""
@@ -411,9 +381,7 @@ const AddProperty = ({ navigation, route }) => {
                     errors={errors} errorMsg=""
                 />
 
-                {/* DETAILS */}
                 <Text style={styles.header}>Details</Text>
-                {/* SIZE */}
                 <TextInputComponent
                     name="size"
                     kbType="numeric"
@@ -423,7 +391,7 @@ const AddProperty = ({ navigation, route }) => {
                     errors={errors}
                     errorMsg=""
                 />
-                {/* LOT SIZE */}
+
                 <TextInputComponent
                     name="lotSize"
                     kbType="numeric"
@@ -433,7 +401,7 @@ const AddProperty = ({ navigation, route }) => {
                     errors={errors}
                     errorMsg=""
                 />
-                {/* ROOMS */}
+
                 <TextInputComponent
                     name="rooms"
                     kbType="numeric"
@@ -443,7 +411,7 @@ const AddProperty = ({ navigation, route }) => {
                     errors={errors}
                     errorMsg=""
                 />
-                {/* BEDROOMS */}
+
                 <TextInputComponent
                     name="bedrooms"
                     kbType="numeric"
@@ -453,7 +421,7 @@ const AddProperty = ({ navigation, route }) => {
                     errors={errors}
                     errorMsg=""
                 />
-                {/* BATHROOM */}
+
                 <TextInputComponent
                     name="bathrooms"
                     kbType="numeric"
@@ -463,7 +431,7 @@ const AddProperty = ({ navigation, route }) => {
                     errors={errors}
                     errorMsg=""
                 />
-                {/* BASEMENT */}
+
                 <TextInputComponent
                     name="basement"
                     kbType=""
@@ -474,40 +442,31 @@ const AddProperty = ({ navigation, route }) => {
                     errorMsg=""
                 />
 
-                {/* GARAGE SIZE */}
                 <PickerComponent name="garages" label="Garages" optionList={constants.garages} control={control} />
-                {/* GARAGE SIZE */}
                 <PickerComponent name="garageSize" label="Garage size" optionList={constants.garageSize} control={control} />
 
-                {/* YEAR */}
                 <DatePickerComponent name="year" control={control} label="Year Built (*date)" />
-                {/* AVAILABILITY */}
+
                 <DatePickerComponent name="availability" control={control} label="Available from (*date)" />
 
-                {/* EXTERNAL CONSTRUCTION */}
                 <TextInputComponent name="extConstruction" kbType="" placeholder="External construction (*text)" isRequired={false} control={control} errors={errors} errorMsg="" />
-                {/* ROOFING */}
+
                 <TextInputComponent name="roofing" kbType="" placeholder="Roofing (*text)" isRequired={false} control={control} errors={errors} errorMsg="" />
 
 
-                {/* ENERGY CLASS AND INDEX */}
                 <Text style={styles.label}>Select Energy Class</Text>    
-                {/* ENERGY CLASS */}
                 <PickerComponent name="energyClasses" optionList={constants.energyClasses} control={control} />
-                {/* ENERGY INDEX */}
+
                 <TextInputComponent name="energyIndex" kbType="" placeholder="Energy Index in kWh/m2a" isRequired={false} control={control} errors={errors} errorMsg="" />
 
-                {/* Featured */}
                 <Text style={styles.header}>Featured Property</Text>
                 <SwitchButtonComponent name="featured" label="Featured Property Setup" control={control} customLabelCss={{textTransform:"capitalize"}} isFeatured={true} />
 
-                {/* AMENTIES AND FEATURES */}
                 <Text style={styles.header}>Amenties and Features</Text>
                 {
                     features &&
                     <View>
                         <FlatList
-                            // ref={flatListRef}
                             style={{flex:1}}
                             data={features}
                             keyExtractor={item => `${item.id}`}
@@ -519,7 +478,6 @@ const AddProperty = ({ navigation, route }) => {
                     </View>
                 }
 
-                {/* Submit Button */}
                 {
                     userId == null
                     ?
@@ -577,8 +535,6 @@ const AddProperty = ({ navigation, route }) => {
                 </View>
             </>
 
-        {/* </KeyboardAvoidingView> */}
-
         </KeyboardAwareScrollView>
         
         
@@ -599,10 +555,7 @@ const styles = StyleSheet.create({
         color: COLORS.primary,
         ...FONTS.body3,
         marginTop: 15,
-        // marginBottom:10,
         marginLeft: 0,
-        // fontSize:24,
         letterSpacing:1,
-        // textTransform:'uppercase'
     },
 })

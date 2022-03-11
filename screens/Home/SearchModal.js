@@ -1,3 +1,4 @@
+ 
 import React from 'react'
 import { Text, View, Animated, TouchableWithoutFeedback, Modal, ScrollView, FlatList, TouchableOpacity, Image } from 'react-native'
 import FilterSection from '../../components/FilterSection';
@@ -14,7 +15,7 @@ import { COLORS ,FONTS ,SIZES } from '../../constants/theme'
 import TextButton from '../../components/TextButton';
 import HorizontalCard from '../../components/HorizontalCard'
 
-const SearchModal = ({ navigation, isVisible, searchResultData, query, onClose }) => {
+const SearchModal = ({ navigation, refEle, isVisible, searchResultData, query, onClose }) => {
     const modelAnimatedValue = React.useRef( new Animated.Value(0) ).current
 
     const [ searchResult, setSearchResult ] = React.useState([])
@@ -167,17 +168,17 @@ const SearchModal = ({ navigation, isVisible, searchResultData, query, onClose }
                         }}
                     >
                         <View style={{flex:1}}>
-                        {query ?
+                            {query ?
 
-                            <Text
-                                style={{flex:1,...FONTS.h3, fontSize:18}}
-                            >Your search result for <Text style={{...FONTS.h3, fontSize:18,color:COLORS.primary}}>"{query}"</Text></Text>
-                            
-                            :
-                            <Text
-                                style={{flex:1,...FONTS.h3, fontSize:18}}
-                            >Your search result by filter</Text>
-                        }
+                                <Text
+                                    style={{flex:1,...FONTS.h3, fontSize:18}}
+                                >Your search result for <Text style={{...FONTS.h3, fontSize:18,color:COLORS.primary}}>"{query}"</Text></Text>
+                                
+                                :
+                                <Text
+                                    style={{flex:1,...FONTS.h3, fontSize:18}}
+                                >Your search result by filter</Text>
+                            }
                             <Text
                                 style={{flex:1,...FONTS.h5,color:COLORS.gray}}
                             >Number of properties found - {searchResult.length}</Text>
@@ -227,14 +228,17 @@ const SearchModal = ({ navigation, isVisible, searchResultData, query, onClose }
                     >
 
                         <TextButton
-                            label="Show All"
-                            disabled={ searchResult.length ? false: true }
+                            label="Try Another Search"
+                            // disabled={ searchResult.length ? false: true }
                             buttonContainerStyle={{
                                 height:50,
                                 borderRadius:SIZES.base,
-                                backgroundColor: searchResult.length ? COLORS.primary : COLORS.transparentPrimray
+                                backgroundColor: COLORS.primary
                             }}
-                            onPress={() => console.log("Show All Result")}
+                            onPress={() => {
+                                setShowSearchModal(false)
+                                refEle.current.focus();
+                            }}
                         />
 
                     </View>

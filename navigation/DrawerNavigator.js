@@ -3,9 +3,6 @@ import { Text, View, TouchableOpacity, Image} from 'react-native'
 import { createDrawerNavigator, DrawerContentScrollView, useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Screens
-import { MainLayout } from '../screens'
-
 // Constants
 import constants from '../constants/constants'
 import icons from '../constants/icons'
@@ -14,15 +11,11 @@ import {COLORS, FONTS, SIZES} from '../constants/theme'
 // Components
 import CustomDrawerItem from '../components/CustomDrawerItem'
 
-// Components
+// Screens
+import MainLayout from '../screens/MainLayout'
 import PropertyDetail from '../screens/Property/PropertyDetail'
-import Cart from '../screens/Cart/Cart'
-import Checkout from '../screens/Checkout/Checkout'
-import MyCards from '../screens/Cards/MyCards'
-import AddNewCard from '../screens/Cards/AddNewCard'
-import Success from '../screens/Checkout/Success'
 import MapScreen from '../screens/Map/MapScreen'
-import SingleMapScreen from '../screens/Map/SingleMapScreen';
+import SingleMapScreen from '../screens/Map/SingleMapScreen'
 ///
 // Redux
 import { connect } from 'react-redux'
@@ -32,7 +25,7 @@ import { userSignOutAction } from '../store/user/userActions'
 
 const Drawer = createDrawerNavigator()
 
-const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
+const CustomDrawerContent = ({ navigation, route, selectedTab, setSelectedTab }) => {
 
     const dispatch = useDispatch();
     const [ isLoggedIn, setIsLoggedIn ] = React.useState(false)
@@ -41,28 +34,26 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
 
     React.useEffect(() => {
         let mounted = true;
-            (async () => {
-                try{
-                    const token = await AsyncStorage.getItem('token')
-                    const userId = await AsyncStorage.getItem('userId')
-                    const username = await AsyncStorage.getItem('username')
-                    console.log("DRAWER_NAV", username, userId,token)
-                    if( token && userId && username ){
-                        // console.log(token)
-                        if( mounted ) {
-                            setIsLoggedIn(true)
-                            setUserName( username )
-                        }
-                    }
-                    else{
-                        // console.log(token)
-                        if( mounted ) setIsLoggedIn(false)
+        (async () => {
+            try{
+                const token = await AsyncStorage.getItem('token')
+                const userId = await AsyncStorage.getItem('userId')
+                const username = await AsyncStorage.getItem('username')
+                if( token && userId && username ){
+                    console.log("DRAWER_NAV", username, userId, token)
+                    if( mounted ) {
+                        setIsLoggedIn(true)
+                        setUserName( username )
                     }
                 }
-                catch(err){
-                    setIsLoggedIn(false)
+                else{
+                    if( mounted ) setIsLoggedIn(false)
                 }
-            })()
+            }
+            catch(err){
+                setIsLoggedIn(false)
+            }
+        })()
         
         return () => {
             mounted = false
@@ -74,14 +65,12 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
             scrollEnabled={true}
             contentContainerStyle={{flex:1}}
         >
-            {/* Drawer Body */}
             <View
                 style={{
                     flex:1,
                     paddingHorizontal: SIZES.radius,
                 }}
             >
-                {/* Close */}
                 <View
                     style={{
                         alignItems: 'flex-start',
@@ -107,7 +96,6 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Profile */}
                 <TouchableOpacity
                     style={{
                         flexDirection: "row",
@@ -132,12 +120,11 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                     <View
                     style={{marginLeft: SIZES.radius}}>
                         <Text style={{color: COLORS.white, ...FONTS.h3 }}
-                        >{ userName ? userName : 'Ahuse' }</Text>
+                        >{ userName ? JSON.parse(userName) : 'Ahuse' }</Text>
                         <Text style={{color:COLORS.white, ...FONTS.body4}}>View your profile</Text>
                     </View>
                 </TouchableOpacity>
 
-                {/* Drawer Items */}
                 <View
                     style={{
                         flex:1,
@@ -150,6 +137,16 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                         isFocused={selectedTab == constants.screens.home}
                         onPress={() => {
                             setSelectedTab( constants.screens.home )
+                            navigation.navigate("MainLayout")
+                        }}
+                    />
+
+                    <CustomDrawerItem
+                        label={constants.screens.search}
+                        icon={icons.search}
+                        isFocused={selectedTab == constants.screens.search}
+                        onPress={() => {
+                            setSelectedTab( constants.screens.search )
                             navigation.navigate("MainLayout")
                         }}
                     />
@@ -183,8 +180,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                         }}
                     />
 
-                     {/* Line Divider */}
-                     <View
+                    <View
                         style={{
                             height:1,
                             marginVertical: SIZES.radius,
@@ -193,40 +189,44 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab }) => {
                         }}
                     />
 
-                    {/* Coupon */}
                     <CustomDrawerItem
                         label="Coupon"
                         icon={icons.coupon}
-                        onPress={() => navigation.navigate("Settings")}
+                        onPress={() => {
+                            // navigation.navigate("Settings")
+                            console.log("Coupon")
+                        }}
                     />
-                    {/* Settings */}
+
                     <CustomDrawerItem
                         label="Settings"
                         icon={icons.setting}
-                        onPress={() => navigation.navigate("Settings")}
+                        onPress={() => {
+                            // navigation.navigate("Settings")
+                            console.log("Settings")
+                        }}
                     />
-                    {/* Invite friends */}
+
                     <CustomDrawerItem
                         label="Invite a friend"
                         icon={icons.profile}
-                        // onPress={() => navigation.navigate("Settings")}
+                        onPress={() => console.log("Invite a friend")}
                     />
-                    {/* Help Center */}
+
                     <CustomDrawerItem
                         label="Help Center"
                         icon={icons.help}
-                        // onPress={() => navigation.navigate("Settings")}
+                        onPress={() => console.log("Help Center")}
                     />
 
                 </View>
 
-                {/* Footer */}
                 <View
                     style={{
                         marginBottom: SIZES.padding
                     }}
                 >
-                    {/* Logout/SignIn */}
+
                     { isLoggedIn ?
                         <CustomDrawerItem
                             label="Logout"
@@ -300,28 +300,6 @@ const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
                 <Drawer.Screen name="PropertyDetail">
                     {(props) => <PropertyDetail {...props} />}
                 </Drawer.Screen>
-                
-                <Drawer.Screen name="Cart">
-                    {(props) => <Cart {...props} />}
-                </Drawer.Screen>
-
-                <Drawer.Screen name="MyCards">
-                    {(props) => <MyCards {...props} />}
-                </Drawer.Screen>
-
-                <Drawer.Screen name="AddCard">
-                    {(props) => <AddNewCard {...props} />}
-                </Drawer.Screen>
-                                
-                <Drawer.Screen name="Checkout">
-                    {(props) => <Checkout {...props} />}
-                </Drawer.Screen>
-                                
-                <Drawer.Screen name="Success">
-                    {(props) => <Success {...props} options={{
-                        gestureEnabled:false
-                    }} />}
-                </Drawer.Screen>
                                 
                 <Drawer.Screen name="MapScreen">
                     {(props) => <MapScreen {...props} options={{
@@ -340,9 +318,7 @@ const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
 }
 
 // export default DrawerNavigator
-
 function mapStateToProps( state ) {
-    // console.log(state.userReducer)
     return {
         selectedTab: state?.tabReducer?.selectedTab?.tabPayload
     }

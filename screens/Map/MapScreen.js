@@ -1,9 +1,8 @@
 import React from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, FlatList } from 'react-native'
-// import { useDrawerProgress } from '@react-navigation/drawer';
-// import Animated from 'react-native-reanimated';
+import { StyleSheet, View, Image, TouchableOpacity, Dimensions, FlatList } from 'react-native'
+
 import { useSelector } from 'react-redux';
-// import MapView, { PROVIDER_GOOGLE, Marker,  AnimatedRegion, Animated, MarkerAnimated } from 'react-native-maps'
+
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 
 import { COLORS, SIZES, FONTS, BOXSHADOW } from '../../constants/theme'
@@ -16,19 +15,19 @@ const MapScreen = ( { navigation, route } ) => {
 
     const [properties, setProperties] = React.useState([])
     const [region, setRegion] = React.useState({
-        latitude: 37.78825, // 37.78825
-        longitude: -122.4324, // -122.4324
+        latitude: 37.78825,
+        longitude: -122.4324,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       })
 
     React.useEffect(() => {
 
-        if(selectedProperties) {
+        if(selectedProperties.length) {
             setProperties(selectedProperties)
             setRegion({
-                latitude: parseFloat(selectedProperties[0].latitude), // 37.78825
-                longitude: parseFloat(selectedProperties[0].longitude), // -122.4324
+                latitude: parseFloat(selectedProperties[0].latitude),
+                longitude: parseFloat(selectedProperties[0].longitude),
                 latitudeDelta: 1.4,
                 longitudeDelta: 1.4,
             })
@@ -40,19 +39,11 @@ const MapScreen = ( { navigation, route } ) => {
         }
     }, [selectedProperties])
 
-    // Handler
-    const onRegionChangeHandler = ( region ) => {
-        // setRegion( region.setValue(region) )
-        setRegion( region )
-    }
-
     return (
         <View
             style={{
                 flex: 1,
-                    backgroundColor: COLORS.white,
-                    // position:"relative",
-                    // ...animatedStyle
+                backgroundColor: COLORS.white
             }}
         >
 
@@ -92,8 +83,6 @@ const MapScreen = ( { navigation, route } ) => {
                 style={{
                     position:"absolute",
                     bottom:0,
-                    // left:SIZES.padding,
-                    // ...BOXSHADOW,
                     zIndex:999,
                     backgroundColor:COLORS.transparentPrimray,
                     borderTopWidth:3,
@@ -115,7 +104,6 @@ const MapScreen = ( { navigation, route } ) => {
                                 ...BOXSHADOW,
                             }}
                             imageStyle={{
-                                // marginTop: 35,
                                 margin: 10,
                                 borderRadius:SIZES.radius,
                                 height: 150,
@@ -131,18 +119,13 @@ const MapScreen = ( { navigation, route } ) => {
             </View>
 
             <MapView
-                mapType="standard" // hybrid
-                // region={region}
+                mapType="standard"
                 initialRegion={region}
                 provider={PROVIDER_GOOGLE}
-                // customMapStyle={mapStyle}
                 showsUserLocation={true}
                 zoomEnabled={true}
                 showsCompass={true}
                 showsScale={true}
-                // cacheEnabled={true}
-                // loadingEnabled={true}
-                // onRegionChange={onRegionChangeHandler}
                 style={{
                     width: Dimensions.get("window").width,
                     height: Dimensions.get("window").height,
@@ -159,7 +142,6 @@ const MapScreen = ( { navigation, route } ) => {
                             <Image source={icons.locationPin} style={{height: 35, width:35, tintColor:COLORS.primary }} />
                         </Marker>
                     ))
-                    
                 }
 
             </MapView>

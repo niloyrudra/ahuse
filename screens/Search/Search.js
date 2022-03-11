@@ -53,7 +53,6 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
 
     React.useEffect(() => {
         setIsLoading(true)
-        // console.log('Loading Taxonomy data')
         if(allTaxData) {
             if( allTaxData.action_cat ) setTypeTaxonomies( allTaxData.action_cat.filter( item => item.count > 0 ) )
             if( allTaxData.cat ) {
@@ -64,7 +63,6 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
 
             setIsLoading(false)
         }
-        // console.log('Loaded Taxonomy data')
     }, [allTaxData])
 
     React.useEffect(() => {
@@ -76,7 +74,6 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
     React.useEffect(() => {
         setTypeId(typeTaxonomies[0]?.id)
         if(properties.length) setPropertiesByType(properties.filter( item => item.cad_ids == typeTaxonomies[0]?.id ))
-        // getPropertiesByTypeHandler( typeTaxonomies[0]?.id )
     },[typeTaxonomies])
 
     return (
@@ -98,7 +95,6 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                         backgroundColor: COLORS.lightGray2
                     }}
                 >
-                    {/* Icon */}
                     <Image
                         source={icons.search}
                         style={{
@@ -108,7 +104,6 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                         }}
                     />
 
-                    {/* Text Input */}
                     <TextInput
                         ref={searchRef}
                         style={{
@@ -116,10 +111,8 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                             marginLeft:SIZES.radius,
                             ...FONTS.body3
                         }}
-                        // value={searchQuery}
                         placeholder="Search Properties"
                         onChangeText={(value) => {
-                            // setSearchQuery(value)
                             clearTimeout(searchQueryTimeout)
                             searchQueryTimeout = setTimeout(() => {
                                 let data = []
@@ -127,7 +120,6 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                                 if(searchRef.current.length == 0) return
                                 if(properties)
                                 {
-                                    // console.log(searchModelRef.current)
                                     const type = isSales ? 'Sales' : (isRental ? 'Rentals': '');
                                     if(type != ''){
                                         data = properties.filter( item => item.cad_names.includes( type ) && ( item.address.toLowerCase().includes( value.toLowerCase() ) || item.title.toLowerCase().includes( value.toLowerCase() ) ))
@@ -139,19 +131,15 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                                     {
                                         setFilteredProperties(data)
                                     }
-                                    // setSearchQuery(value)
-                                    // setShowSearchResultModal(true)
                                 }
                             }, 750)
 
                         }}
                     />
 
-                    {/* Filter Button */}
                     <TouchableOpacity
                         onPress={() => {
                             searchRef.current = ''
-                            // setSearchQuery('')
                             setShowFilterModal(true)
                         }}
                     >
@@ -169,13 +157,10 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
 
                 <View
                     style={{
-                        // flex:1,
                         flexDirection:"row",
                         justifyContent:'space-between',
                         alignItems:"center",
                         height:40,
-                        // borderBottomWidth:1,
-                        // borderBottomColor:COLORS.lightGray,
                         paddingBottom:10
                     }}
                 >
@@ -188,7 +173,7 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                     >
                         <Switch
                             trackColor={{ false: COLORS.gray3, true: COLORS.primary }}
-                            thumbColor={isSales ? COLORS.primary : "#f4f3f4"} // "#81b0ff"
+                            thumbColor={isSales ? COLORS.primary : "#f4f3f4"}
                             onValueChange={ val => {
                                 setIsRental(!val)
                                 setIsSales(val)
@@ -207,7 +192,7 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                     >
                         <Switch
                             trackColor={{ false: COLORS.gray3, true: COLORS.primary }}
-                            thumbColor={isRental ? COLORS.primary : "#f4f3f4"} // "#81b0ff"
+                            thumbColor={isRental ? COLORS.primary : "#f4f3f4"}
                             onValueChange={ val => {
                                 setIsSales(!val)
                                 setIsRental(val)
@@ -256,7 +241,7 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                             ListFooterComponent={
                                 <View
                                     style={{
-                                        height:200
+                                        height:300
                                     }}
                                 />
                             }
@@ -272,24 +257,19 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                             paddingHorizontal:SIZES.padding
                         }}
                     >
-                        {/* <View> */}
                             <Image
-                                // source={images.srcScreenBgClr}
                                 source={images.srcScreenBgVct}
                                 resizeMode='contain'
                                 style={{
                                     width:'90%',
                                     tintColor:COLORS.lightGray1,
-                                    // marginBottom:SIZES.padding
                                 }}
                             />
                             <Text style={{color:COLORS.gray2,...FONTS.h3,marginTop:-40}}>Search for your property.</Text>
-                        {/* </View> */}
                     </View>
                 )
             }
 
-            {/* Modal */}
             {showFilterModal &&
                 <FilterModal
                     refEle={searchRef}
@@ -300,7 +280,6 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
                     areaList={areaTaxonomies}
                     onClose={() => setShowFilterModal(false)}
                     onGenerateSearchData={(data) => setFilteredProperties(data)}
-                    // onShowSearchModal={() => setShowSearchResultModal(true)}
                 />
             }
         </>
@@ -308,7 +287,6 @@ const Search = ({ navigation, route, selectedProperties, setAllCats }) => {
 }
 
 function mapStateToProps( state ) {
-    // console.log(state.userReducer)
     return {
         selectedProperties: state?.propertyReducer?.allProperties,
         selectedCats: state?.propertyReducer?.allCategories,

@@ -1,7 +1,7 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableWithoutFeedback, Image } from 'react-native'
+import { TouchableWithoutFeedback, Image } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { COLORS, FONTS, SIZES } from '../constants/theme'
+import { COLORS } from '../constants/theme'
 
 const TabButton = ({ label, icon, onPress, isFocused, outerContainerStyles, innerContainerStyles }) => {
     return (
@@ -40,22 +40,6 @@ const TabButton = ({ label, icon, onPress, isFocused, outerContainerStyles, inne
                         }}
                     />
 
-                    {/* {
-                        isFocused && (
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    marginLeft:SIZES.base,
-                                    color: isFocused ? COLORS.white : COLORS.gray,
-                                    ...FONTS.h3
-                                }}
-                            >
-                                {label}
-                            </Text>
-                            )
-                    } */}
-                    
-
                 </Animated.View>
             </Animated.View>
         </TouchableWithoutFeedback>
@@ -63,5 +47,3 @@ const TabButton = ({ label, icon, onPress, isFocused, outerContainerStyles, inne
 }
 
 export default TabButton
-
-const styles = StyleSheet.create({})

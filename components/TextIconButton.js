@@ -9,7 +9,6 @@ const TextIconButton = ( { label, disabled, labelStyle, containerStyle, icon, ic
                 flexDirection:"row",
                 alignItems: "center",
                 justifyContent: "center",
-                // backgroundColor: COLORS.primary,
                 ...containerStyle
             }}
             disabled={disabled}

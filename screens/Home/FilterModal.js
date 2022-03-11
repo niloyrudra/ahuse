@@ -1,18 +1,17 @@
 import React from 'react'
 import { Text, View, Animated, TouchableWithoutFeedback, Modal, ScrollView, FlatList, TouchableOpacity, Image } from 'react-native'
-import FilterSection from '../../components/FilterSection';
 
 
 // Component
+import FilterSection from '../../components/FilterSection';
 import IconButton from '../../components/IconButton';
 import TwoPointSlider from '../../components/TwoPointSlider';
-import LineDivider from '../../components/LineDivider';
+import TextButton from '../../components/TextButton';
+
 // Constants
 import constants from '../../constants/constants';
 import icons from '../../constants/icons';
-
 import { COLORS ,FONTS ,SIZES } from '../../constants/theme'
-import TextButton from '../../components/TextButton';
 
 const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onClose, onGenerateSearchData, onShowSearchModal=null }) => {
     const modelAnimatedValue = React.useRef( new Animated.Value(0) ).current
@@ -96,7 +95,6 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
         return (
             <FilterSection
                     title="Category"
-                    // containerStyle={{}}
             >
                 <FlatList
                     horizontal
@@ -104,7 +102,6 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                     keyExtractor={item => `${item.id}`}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{
-                        // marginTop: 30,
                         marginBottom: 20
                     }}
                     renderItem={ ( { item, index } ) => (
@@ -124,20 +121,9 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                             }}
                             onPress={() => setSelectedCatId(item.id) }
                         >
-                            {/* <Image
-                                source={icons.category}
-                                style={{
-                                    width:12,
-                                    height:12,
-                                    marginRight: SIZES.base,
-                                    tintColor: selectedCatId == item.id ? COLORS.white : COLORS.gray
-                                }}
-                            /> */}
                             <Text
                                 style={{
                                     color: selectedCatId == item.id ? COLORS.white : COLORS.darkGray,
-                                    // alignSelf: 'center',
-                                    // marginRight: SIZES.base,
                                     textAlign:"center",
                                     ...FONTS.h3
                                 }}
@@ -189,13 +175,11 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                     keyExtractor={item => `${item.id}`}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{
-                        // marginTop: 30,
                         marginBottom: 20
                     }}
                     renderItem={ ( { item, index } ) => (
                         <TouchableOpacity
                             style={{
-                                // flexDirection: "row",
                                 flex:1,
                                 height: 55,
                                 marginTop: SIZES.padding,
@@ -212,8 +196,6 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                             <Text
                                 style={{
                                     color: selectedTypeId == item.id ? COLORS.white : COLORS.darkGray,
-                                    // alignSelf: 'center',
-                                    // marginRight: SIZES.base,
                                     textAlign:"center",
                                     ...FONTS.h3
                                 }}
@@ -238,13 +220,11 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                     keyExtractor={item => `${item.id}`}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={{
-                        // marginTop: 30,
                         marginBottom: 20
                     }}
                     renderItem={ ( { item, index } ) => (
                         <TouchableOpacity
                             style={{
-                                // flexDirection: "row",
                                 flex:1,
                                 height: 55,
                                 marginTop: SIZES.padding,
@@ -261,8 +241,6 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                             <Text
                                 style={{
                                     color: selectedAreaId == item.id ? COLORS.white : COLORS.darkGray,
-                                    // alignSelf: 'center',
-                                    // marginRight: SIZES.base,
                                     textAlign:"center",
                                     ...FONTS.h3
                                 }}
@@ -288,8 +266,6 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                     backgroundColor: COLORS.transparentBlack7
                 }}
             >
-                {/* Transparent Background */}
-
                 <TouchableWithoutFeedback
                     onPress={() => setShowFilterModal(false)}
                 >
@@ -318,7 +294,6 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                     }}
                 >
 
-                    {/* Header Section */}
                     <View
                         style={{
                             flexDirection:"row",
@@ -345,33 +320,25 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                         
                     </View>
 
-                    {/* Filter Form Section */}
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{
                             paddingBottom: 250
                         }}
                     >
-                        {/* Distance Section */}
+
                         {renderDistance()}
 
-                        {/* Category Section */}
                         {renderCategory()}
 
-                        {/* Price Section */}
                         {renderPrice()}
 
-                        {/* Types Section */}
                         {renderTypes()}
 
-                        {/* Areas Section */}
                         {renderNeighbourhoods()}
-
 
                     </ScrollView>
 
-
-                    {/* Apply Button */}
                     <View
                         style={{
                             flex:1,
@@ -399,8 +366,6 @@ const FilterModal = ({ data, refEle, isVisible, catList, typeList, areaList, onC
                                 if(data)
                                 {
                                     let propertyData = data.filter( item => item.cat_ids.includes( selectedCatId ) && item.cad_ids.includes( selectedTypeId ) && item.area_ids.includes( selectedAreaId ) && item.price >= price )
-
-                                    console.log(propertyData.length)
                                     onGenerateSearchData(propertyData)
                                     if(onShowSearchModal) onShowSearchModal()
                                 }

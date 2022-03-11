@@ -3,21 +3,20 @@ import { FlatList } from 'react-native'
 import Section from './Section'
 import HorizontalCard from './HorizontalCard'
 
-import { COLORS, SIZES, FONTS } from '../constants/theme'
+import { SIZES } from '../constants/theme'
 
 const RecommendedSection = ({navigation, data}) => {
 
     return (
         <Section
             title="Recommended"
-            onPress={() => console.log("Show all recommended properties")}
+            onPress={() => navigation.navigate("MapScreen", {items:data})}
         >
             <FlatList
                 data={data}
                 keyExtractor={item => `${item.id}`}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                // contentContainerStyle={{}}
                 renderItem={ ({  item, index }) => (
                     <HorizontalCard
                         containerStyle={{
@@ -29,14 +28,12 @@ const RecommendedSection = ({navigation, data}) => {
                             alignItems: "center"
                         }}
                         imageStyle={{
-                            // marginTop: 35,
                             margin: 10,
                             borderRadius:SIZES.radius,
                             height: 150,
                             width: 150,
                         }}
                         item={item}
-                        // navigation={navigation}
                         onPress={() => navigation.navigate("PropertyDetail", { item:item })}
                     />
                 )}

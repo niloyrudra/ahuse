@@ -51,9 +51,7 @@ const styles = StyleSheet.create({
     },
     label: {
         color: COLORS.gray,
-        marginTop: SIZES.padding,
-        // marginBottom:-10,
-        // marginLeft: 0,
+        marginTop: SIZES.padding
     },
     errorMessage:{
         color:'red',

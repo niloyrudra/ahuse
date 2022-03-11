@@ -5,11 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux'
 import { getAllProperties } from '../../store/property/propertyActions';
 
-import images from '../../constants/images';
-import LineDivider from '../../components/LineDivider';
 import HorizontalCard from '../../components/HorizontalCard';
-import HeaderWithItemNum from '../../components/HeaderWithItemNum';
-import TextButton from '../../components/TextButton';
 
 import icons from '../../constants/icons';
 import { COLORS, FONTS, SIZES } from '../../constants/theme';
@@ -18,27 +14,22 @@ const Favourite = ({navigation, selectedProperties, setAllProperties }) => {
 
     const [ userId, setUserId ] = React.useState(null)
     const [ favProperties, setFavProperties ] = React.useState([])
-    const [ favPropList, setFavPropList ] = React.useState([])
 
     React.useEffect(() => {
         let mounted = true;
         (async () => {
             try{
                 const userId = await AsyncStorage.getItem("userId")
-                // const list = userId ? await AsyncStorage.getItem(`favProps${userId}`) : []
                 if(mounted && userId) setUserId(userId)
-                // if(list) setFavPropList(JSON.parse(list));
             }
             catch(err){
                 console.log("Profile data Async Error", err);
                 setUserId(null);
-                // setFavPropList([]);
             }
         })();
         return () => {
             mounted = false;
             setUserId(null);
-            // setFavPropList([]);
         }
     }, [])
 
@@ -46,7 +37,6 @@ const Favourite = ({navigation, selectedProperties, setAllProperties }) => {
         if(selectedProperties && userId)
         {
             const properties = selectedProperties.filter( item => item.is_fav == 1 )
-            console.log("Fav Property Length >>>", properties.length)
             setFavProperties( properties );
         }
         return () => {
@@ -112,7 +102,6 @@ const Favourite = ({navigation, selectedProperties, setAllProperties }) => {
                             width:'60%',
                             height:'60%',
                             tintColor:COLORS.lightGray1,
-                            // marginBottom:SIZES.padding
                         }}
                     />
                     <Text style={{color:COLORS.gray2,...FONTS.h3}}>No favourite properties found! Please come again later.</Text>

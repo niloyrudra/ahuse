@@ -3,7 +3,7 @@ import { FlatList } from 'react-native'
 import Section from './Section'
 import VerticalCard from './VerticalCard'
 
-import { COLORS, SIZES, FONTS } from '../constants/theme'
+import { SIZES } from '../constants/theme'
 
 
 const PopularSection = ({navigation, data}) => {
@@ -17,7 +17,6 @@ const PopularSection = ({navigation, data}) => {
                 keyExtractor={item => `${item.id}`}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                // contentContainerStyle={{}}
                 renderItem={ ({  item, index }) => (
                     <VerticalCard
                         containerStyle={{
@@ -26,7 +25,6 @@ const PopularSection = ({navigation, data}) => {
                             padding: 18
                         }}
                         imageStyle={{
-                            // marginTop: 35,
                             margin: 10,
                             borderRadius:SIZES.radius,
                             height: 150,
