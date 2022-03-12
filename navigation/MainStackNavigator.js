@@ -62,14 +62,14 @@ const MainStackNavigator = ( { selectedProperties, selectedRecommended, selected
             screenOptions={{
                 headerShown: false
             }}
-            initialRouteName={'Home'}
+            initialRouteName={'Drawer'}
         >
             <Stack.Screen
                 name="Auth"
                 component={AuthStackNavigator}
             />
             <Stack.Screen
-                name="Home"
+                name="Drawer"
                 component={DrawerNavigator}
             />
 

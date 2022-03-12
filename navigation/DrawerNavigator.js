@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, TouchableOpacity, Image} from 'react-native'
 import { createDrawerNavigator, DrawerContentScrollView, useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Screens
 
@@ -26,34 +26,20 @@ import { userSignOutAction } from '../store/user/userActions'
 
 const Drawer = createDrawerNavigator()
 
-const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab, selectedToken }) => {
+const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab, selectedToken, selectedUserId, selectedUsername }) => {
     
     const dispatch = useDispatch()
     const [ isLoggedIn, setIsLoggedIn ] = React.useState(false)
     const [ username, setUserName ] = React.useState('')
 
     React.useEffect(() => {
-        let mounted = true;
-        (async () => {
-            if( mounted ) {
-                // const token = await AsyncStorage.getItem("token")
-                const userName = await AsyncStorage.getItem("username");
-                if( userName ) {
-                    setIsLoggedIn(true);
-                    setUserName( JSON.parse(userName) );
-                }
-                else {
-                    setUserName('');
-                    setIsLoggedIn(false);
-                }
-            }
-        })()
-        return () => {
-            mounted = false;
-            setUserName('');
-            setIsLoggedIn(false);
+        console.log( "Custom Drawer User ID -- ", selectedUserId)
+        console.log( "Custom Drawer Username -- ", selectedUsername)
+        if( selectedUsername ) {
+            setUserName( selectedUsername );
+            setIsLoggedIn(true);
         }
-    }, []);
+    }, [selectedUserId, selectedUsername])
 
     return (
         <DrawerContentScrollView
@@ -250,9 +236,9 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab, selected
                                 dispatch( userSignOutAction() )
                                 navigation.closeDrawer()
                                 console.log("logged out")
-                                navigation.navigate("Home")
-                                // setSelectedTab( constants.screens.home )
-                                // navigation.navigate("MainLayout")
+                                // navigation.navigate("Home")
+                                setSelectedTab( constants.screens.home )
+                                navigation.navigate("MainLayout")
                             }}
                         />
                         :
@@ -274,21 +260,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab, selected
     )
 }
 
-const DrawerNavigator = ( { navigation, route, selectedTab, setSelectedTab, selectedToken } ) => {
-
-    // const  [ isLoggedIn, setIsLoggedIn ] = React.useState(true)
-
-    // React.useEffect( () => {
-    //     let mounted = true;
-    //     console.log("route.....", route)
-    //     if( route?.params?.isLoggedIn ) {
-    //         if( mounted ) setIsLoggedIn( true )
-    //     }
-    //     return () => {
-    //         mounted = false;
-    //         setIsLoggedIn( false )
-    //     }
-    // }, [] );
+const DrawerNavigator = ( { navigation, route, selectedTab, setSelectedTab, selectedToken, selectedUserId, selectedUsername } ) => {
 
     return (
         <View
@@ -317,9 +289,12 @@ const DrawerNavigator = ( { navigation, route, selectedTab, setSelectedTab, sele
                     return(
                         <CustomDrawerContent
                             {...props}
+                            // route={route}
                             selectedTab={selectedTab}
                             setSelectedTab={setSelectedTab}
                             selectedToken={selectedToken}
+                            selectedUserId={selectedUserId}
+                            selectedUsername={selectedUsername}
                         />
                     )
                 }}
@@ -352,14 +327,16 @@ function mapStateToProps( state ) {
     return {
         selectedTab: state?.tabReducer?.selectedTab?.tabPayload,
         selectedToken: state?.userReducer?.token,
+        selectedUserId: state?.userReducer?.userId,
+        selectedUsername: state?.userReducer?.username
     }
 }
 
 function mapDispatchToProps( dispatch ) {
-     return {
-         setSelectedTab: selectedTab => dispatch( setSelectedTab(selectedTab) )
-        //  setSelectedTab: selectedTab => dispatch( setSelectedTab(selectedTab) )
-     }
+    return {
+        setSelectedTab: selectedTab => dispatch( setSelectedTab(selectedTab) ),
+        setUserId: selectedUserId => dispatch( getUserID( selectedUserId ) ),
+    }
 }
 
-export default connect( mapStateToProps, mapDispatchToProps )( DrawerNavigator )
+export default connect( mapStateToProps, mapDispatchToProps )( DrawerNavigator );

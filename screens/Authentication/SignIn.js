@@ -29,12 +29,10 @@ const SignIn = ({ navigation, route }) => {
     const dispatch = useDispatch()
 
     const [ username, setUsername ] = React.useState('')
-    // const [ email, setEmail ] = React.useState('')
     const [ password, setPassword ] = React.useState('')
     const [ saveMe, setSaveMe ] = React.useState(false)
 
     const [ usernameError, setUsernameError ] = React.useState('')
-    // const [ emailError, setEmailError ] = React.useState('')
     const [ passwordError, setPasswordError ] = React.useState('')
 
     const [ showPassword, setShowPassword ] = React.useState(false)
@@ -50,7 +48,6 @@ const SignIn = ({ navigation, route }) => {
         setIsLoading(true)
         const userData = {
             username: username.toLowerCase().trim(),
-            // email: email.trim(),
             password,
             saveMe
         };
@@ -75,7 +72,8 @@ const SignIn = ({ navigation, route }) => {
         {
             // navigation.replace("MainLayout")
             // navigation.replace("Home", {isLoggedIn: selectLoggedInUser})
-            navigation.navigate("MainLayout", {isLoggedIn: selectLoggedInUser})  
+            navigation.replace("Drawer")
+            // navigation.navigate("MainLayout", {isLoggedIn: selectLoggedInUser})  
         }
 
         return () => {
@@ -93,7 +91,7 @@ const SignIn = ({ navigation, route }) => {
             subtitle="Welcome back, you have been missed"
         >
             {/* Skip To Home Screen */}
-            <SkipTextButton onPress={() => navigation.navigate("Home") } />
+            <SkipTextButton onPress={() => navigation.navigate("Drawer") } />
 
             <View
                 style={{

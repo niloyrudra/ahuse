@@ -14,7 +14,7 @@ import HorizontalCard from '../../components/HorizontalCard';
 import HeaderWithItemNum from '../../components/HeaderWithItemNum';
 import TextButton from '../../components/TextButton';
 
-const Profile = ({navigation, selectedProperties, setAllProperties, setSelectedTab, onSwitch}) => {
+const Profile = ({navigation, selectedProperties, selectedUsername, selectedUserId, selectedEmail, selectedDisplayName, onSwitch}) => {
 
     const [ email, setEmail ] = React.useState('')
     const [ username, setUsername ] = React.useState('')
@@ -22,35 +22,19 @@ const Profile = ({navigation, selectedProperties, setAllProperties, setSelectedT
     const [ displayName, setDisplayName ] = React.useState('')
     const [ ownedProperties, setOwnedProperties ] = React.useState([])
 
-    React.useEffect(() => {
-        console.log( "[profile - user data]" )
-        let mounted = true;
-        (async () => {
-            try{
-                const userID = await AsyncStorage.getItem("userId");
-                const email = await AsyncStorage.getItem("email");
-                const name = await AsyncStorage.getItem("username");
-                const displayName = await AsyncStorage.getItem("displayName");
-                if( mounted ) {
-                    if(displayName) setDisplayName( JSON.parse( displayName ) );
-                    if(userID) setUserId( JSON.parse( userID ));
-                    if(name) setUsername( JSON.parse( name ));
-                    if(email) setEmail( JSON.parse( email ));
-                }
-                if(!userID) {
-                    setSelectedTab( constants.screens.home )
-                    navigation.navigate("MainLayout")
-                }
-            }
-            catch(err){
-                console.log("Profile data Async Error", err)
-                setUsername('')
-                setDisplayName('')
-                setEmail('')
-            }
-        })();
-        return () => mounted = false
-    }, [])
+    React.useEffect( () => {
+        if( selectedUsername ) setUsername( selectedUsername )
+        if( selectedUserId ) setUserId( selectedUserId )
+        if( selectedEmail ) setEmail( selectedEmail )
+        if( selectedDisplayName ) setDisplayName( selectedDisplayName )
+        return () => {
+            setUsername( '' )
+            setUserId( null )
+            setDisplayName( '' )
+            setEmail( '' )
+        }
+    }, [selectedUsername, selectedUserId, selectedEmail, selectedDisplayName] )
+
 
     React.useEffect(() => {
         console.log( "[profile - properties]" )
@@ -197,6 +181,10 @@ const Profile = ({navigation, selectedProperties, setAllProperties, setSelectedT
 function mapStateToProps( state ) {
     return {
         selectedProperties: state?.propertyReducer?.allProperties,
+        selectedUsername: state?.userReducer?.username,
+        selectedUserId: state?.userReducer?.userId,
+        selectedEmail: state?.userReducer?.email,
+        selectedDisplayName: state?.userReducer?.displayname,
     }
 }
 

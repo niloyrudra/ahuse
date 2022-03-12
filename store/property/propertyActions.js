@@ -94,10 +94,10 @@ export const getRecommendedProp = ( data ) => {
 }
 
 // Get All Popular Properties
-const setPopularList = ( populars ) => {
+const setPopularList = ( popular ) => {
     return {
         type: GET_POPULAR,
-        payload: populars
+        payload: popular
     }
 }
 export const getPopularProp = ( data ) => {

@@ -17,6 +17,8 @@ export const SET_TEMP_TOKEN_SUCCESS = "SET_TEMP_TOKEN_SUCCESS"
 export const SET_TEMP_TOKEN_FAIL = "SET_TEMP_TOKEN_FAIL"
 export const LOG_OUT = "LOG_OUT"
 
+export const SET_USER_ID = "SET_USER_ID"
+
 
 // Local Storage
 import axios from 'axios'
@@ -235,3 +237,13 @@ export const userSignOutAction = () => {
 //   } catch (e) {
 //     console.error(`Error in catch`, { e });
 //   }
+const setUserID = ( id ) => {
+    return {
+        type: SET_USER_ID,
+        payload: id
+    }
+}
+
+export const getUserID = ( userID ) => {
+    return dispatch => dispatch( setUserID( userID ) )
+}

@@ -17,15 +17,16 @@ import PickerComponent from '../../components/PickerComponent';
 import DatePickerComponent from '../../components/DatePickerComponent';
 
 // Redux
-import { useDispatch, useSelector } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { getUserID } from '../../store/user/userActions';
 import { insertNewProperty } from '../../store/property/propertyActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GooglePlacesInput from '../../components/GoogleAutoCompleteInput';
 
-const AddProperty = ({ navigation, route }) => {
+const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
     
     const dispatch = useDispatch()
-    const [userId, setUserId] = React.useState(null);
+    const [userId, setUserID] = React.useState(null);
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
     const [token, setToken] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(false)
@@ -43,7 +44,14 @@ const AddProperty = ({ navigation, route }) => {
         msg:''
     });
 
-    // const user_Id = useSelector( state => state.userReducer?.userId )
+    React.useEffect(() => {
+        // console.log( "Add Property Screen | User ID >>", selectedUserId );
+        if( selectedUserId ) {
+            setUserId( selectedUserId )
+            setUserID( selectedUserId )
+        }
+        return () => setUserID(null)
+    }, [selectedUserId]);
 
     React.useEffect(() => {
         let mounted = true;
@@ -52,28 +60,31 @@ const AddProperty = ({ navigation, route }) => {
                     const token = await AsyncStorage.getItem('token')
                     const userId = await AsyncStorage.getItem('userId')
                     if(token && userId){
-                        console.log("ADD_LISTING", userId, token)
-                        // console.log(token)
+                        console.log("[ADD_LISTING]", userId)
+
                         if( mounted ){
-                            setUserId(userId)
+                            setUserID(userId)
                             setIsLoggedIn(true)
                         }
                     }
                     else{
-                        // console.log(token)
+
                         if( mounted ){
-                            setUserId(null)
+                            setUserID(null)
                             setIsLoggedIn(false)
                         }
                     }
                 }
                 catch(err){
                     setIsLoggedIn(false)
+                    setUserID(null)
                 }
             })()
         
         return () => {
-            mounted = false
+            mounted = false;
+            setIsLoggedIn(false)
+            setUserID(null)
         }
     }, [])
 
@@ -479,7 +490,7 @@ const AddProperty = ({ navigation, route }) => {
                 }
 
                 {
-                    userId == null
+                    (userId == null && !isLoggedIn )
                     ?
                     <View
                         style={{flex:1}}
@@ -541,7 +552,21 @@ const AddProperty = ({ navigation, route }) => {
     )
 }
 
-export default AddProperty
+// export default AddProperty
+function mapStateToProps( state ) {
+    // console.log( "State -> Add Property Screen = ", state?.userReducer?.userId)
+    return {
+        selectedUserId: state?.userReducer?.userId
+    }
+}
+
+function mapDispatchToProps( dispatch ) {
+    return {
+        setUserId: selectedUserId => dispatch( getUserID( selectedUserId ) )
+    }
+}
+
+export default connect( mapStateToProps, mapDispatchToProps )( AddProperty );
 
 const styles = StyleSheet.create({
     label: {

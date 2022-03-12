@@ -122,15 +122,15 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
 
     React.useEffect(() => {
         // let controller = new AbortController();
-        let isMounted = true;
-        console.log(selectedToken)
-        if(isMounted){
+        // let isMounted = true;
+        // console.log(selectedToken)
+        // if(isMounted){
             if(selectedToken) {
                 setIsLoggedIn(true)
             }
-        }
+        // }
         return () => {
-            isMounted= false;
+            // isMounted= false;
             setIsLoggedIn(false)
         }
     }, [selectedToken])

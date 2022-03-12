@@ -80,11 +80,11 @@ const propertyReducer = ( state = initialState, action ) => {
                 ...state,
                 popular: action.payload
             }
-        case SET_FAV_PROPERTY_LIST :
-            return {
-                ...state,
-                favPropIds: action.payload
-            }
+        // case SET_FAV_PROPERTY_LIST :
+        //     return {
+        //         ...state,
+        //         favPropIds: action.payload
+        //     }
             
         default :
             return state;

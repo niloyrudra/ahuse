@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, Image, Text, View } from 'react-native'
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux'
 import { getAllProperties } from '../../store/property/propertyActions';
 
@@ -10,28 +10,34 @@ import HorizontalCard from '../../components/HorizontalCard';
 import icons from '../../constants/icons';
 import { COLORS, FONTS, SIZES } from '../../constants/theme';
 
-const Favourite = ({navigation, selectedProperties, setAllProperties }) => {
+const Favourite = ({navigation, selectedProperties, selectedUserId }) => {
 
     const [ userId, setUserId ] = React.useState(null)
     const [ favProperties, setFavProperties ] = React.useState([])
 
+    // React.useEffect(() => {
+    //     let mounted = true;
+    //     (async () => {
+    //         try{
+    //             const userId = await AsyncStorage.getItem("userId")
+    //             if(mounted && userId) setUserId(userId)
+    //         }
+    //         catch(err){
+    //             console.log("Profile data Async Error", err);
+    //             setUserId(null);
+    //         }
+    //     })();
+    //     return () => {
+    //         mounted = false;
+    //         setUserId(null);
+    //     }
+    // }, [])
+
     React.useEffect(() => {
-        let mounted = true;
-        (async () => {
-            try{
-                const userId = await AsyncStorage.getItem("userId")
-                if(mounted && userId) setUserId(userId)
-            }
-            catch(err){
-                console.log("Profile data Async Error", err);
-                setUserId(null);
-            }
-        })();
-        return () => {
-            mounted = false;
-            setUserId(null);
-        }
-    }, [])
+        if( selectedUserId ) setUserId( selectedUserId )
+        return () => setUserId(null)
+    }, [selectedUserId]);
+
 
     React.useEffect(() => {
         if(selectedProperties && userId)
@@ -116,6 +122,7 @@ const Favourite = ({navigation, selectedProperties, setAllProperties }) => {
 function mapStateToProps( state ) {
     return {
         selectedProperties: state?.propertyReducer?.allProperties,
+        selectedUserId: state?.userReducer?.userId,
     }
 }
 
