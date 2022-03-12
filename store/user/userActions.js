@@ -22,6 +22,8 @@ export const LOG_OUT = "LOG_OUT"
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { getAllRefetchPropertyData } from '../property/propertyActions'
+
 // SIGN_UP ACTION
 export const getTempToken = () => {
 
@@ -102,7 +104,7 @@ export const userSignUpAction = ( userData, setIsLoading, setRequestStatus ) => 
 // SIGN_IN ACTION
 export const userSignInAction = ( userData, setIsLoading ) => {
 
-    return async  dispatch => {
+    return async (dispatch) => {
         try{
             // const response = await axios.post( `${constants.ROOT_URL}wp-json/jwt-auth/v1/token`, userData )
             // fetch( `${constants.ROOT_URL}/jwt-auth/v1/token`, {
@@ -126,12 +128,14 @@ export const userSignInAction = ( userData, setIsLoading ) => {
                         TokenExpIn: data.expires_in,
                         tokenType: data.token_type
                 })
+                if (data && data.jwt_token && data.expires_in) {
+                    // Local Storage
+                    AsyncStorage.removeItem("tempToken")
+                    AsyncStorage.setItem("token", JSON.stringify( data.jwt_token ))
+                    AsyncStorage.setItem("TokenExpIn", JSON.stringify( data.expires_in ))
+                    AsyncStorage.setItem("startSession", JSON.stringify( Date.now() ))
+                }
 
-                // Local Storage
-                AsyncStorage.removeItem("tempToken")
-                AsyncStorage.setItem("token", JSON.stringify( data.jwt_token ))
-                AsyncStorage.setItem("TokenExpIn", JSON.stringify( data.expires_in ))
-                AsyncStorage.setItem("startSession", JSON.stringify( Date.now() ))
             } )
             .catch(error => {
                 console.log("SignIn Action Fails...", error)
@@ -140,7 +144,7 @@ export const userSignInAction = ( userData, setIsLoading ) => {
                     error: error
                 })
                 // setIsLoading(false)
-            })
+            });
 
             // WP_Authenticate - To Get User Data
             fetch( `${constants.ROOT_URL}/wp/v2/users/auth?username=${userData.username}&password=${userData.password}`, {
@@ -152,24 +156,36 @@ export const userSignInAction = ( userData, setIsLoading ) => {
             } )
             .then( res => res.json() )
             .then( resJson => {
-                // console.log(resJson)
+                console.log("USER AUTH DATA", resJson)
                 if( resJson.status == 200 ){
-                    dispatch({
-                        type: SIGN_IN_USER_DATA_SUCCESS,
-                        userData: {
-                            user_id: resJson.user.id,
-                            user_nicename: resJson.user.username,
-                            email: resJson.user.user_email,
-                            user_display_name: resJson.user.display_name,
-                            role: resJson.user.role
-                        },
-                    })
-                    AsyncStorage.setItem("userId", JSON.stringify( resJson.user.id ))
-                    AsyncStorage.setItem("email", JSON.stringify( resJson.user.user_email ))
-                    AsyncStorage.setItem("username", JSON.stringify( resJson.user.username ))
-                    AsyncStorage.setItem("displayName", JSON.stringify( resJson.user.display_name ))
-                    AsyncStorage.setItem("role", JSON.stringify( resJson.user.role ))
-                    setIsLoading(false)
+                    if( resJson.user ) {
+                        const user = resJson.user;
+                        dispatch({
+                            type: SIGN_IN_USER_DATA_SUCCESS,
+                            userData: {
+                                user_id: user.id,
+                                user_nicename: user.username,
+                                email: user.email,
+                                user_display_name: user.display_name,
+                                role: user.role
+                            },
+                        })
+                        if ( user && user.id && user.email && user.username && user.display_name && user.role  ) {
+                            // Local Storage
+                            dispatch( getAllRefetchPropertyData( user.id ) );
+                            AsyncStorage.setItem("userId", JSON.stringify( user.id ))
+                            AsyncStorage.setItem("email", JSON.stringify( user.email ))
+                            AsyncStorage.setItem("username", JSON.stringify( user.username ))
+                            AsyncStorage.setItem("displayName", JSON.stringify( user.display_name ))
+                            AsyncStorage.setItem("role", JSON.stringify( user.role ))
+                        }
+                        setIsLoading(false)
+    
+                        // Regenerate property Data for Logged in user
+                    }
+                    else {
+                        console.log( "NO USER OBJ", resJson )
+                    }
                 }
             } )
             .catch(error => {
@@ -179,7 +195,7 @@ export const userSignInAction = ( userData, setIsLoading ) => {
                     error: error
                 })
                 setIsLoading(false)
-            })
+            });
         }
         catch(err) {
             console.log("User Login err >>", err)
@@ -203,9 +219,19 @@ export const userSignOutAction = () => {
             await AsyncStorage.removeItem(`favProps`, (err) => console.log('favProps_err', err) );
             await AsyncStorage.clear();
             dispatch({ type: LOG_OUT })
+            // Regenerate property Data for Logged in user
+            dispatch( getAllRefetchPropertyData() );
         }
         catch(err) {
             console.log("Log out err >>", err)
         }
     }
 }
+
+// try {
+//     await AsyncStorage.setItem('aTestKey', null, e => {
+//       console.error(`Error in callback`, { e });
+//     });
+//   } catch (e) {
+//     console.error(`Error in catch`, { e });
+//   }

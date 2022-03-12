@@ -44,6 +44,11 @@ const PropertyDetail = ({navigation, route}) => {
     const animatedStyle = { borderRadius, transform: [{scale}] }
 
     React.useEffect(() => {
+        if(property) setIsFav( property.is_fav )
+        return () => setIsFav(false);
+    }, [property])
+
+    React.useEffect(() => {
         let mounted = true;
         // console.log(property)
         (async () => {
@@ -124,7 +129,7 @@ const PropertyDetail = ({navigation, route}) => {
                             style={{
                                 width:20,
                                 height:20,
-                                tintColor: ( isFav || property.is_fav ) ? COLORS.primary : COLORS.gray
+                                tintColor: isFav ? COLORS.primary : COLORS.gray
                             }}
                         />
 
@@ -595,7 +600,7 @@ const PropertyDetail = ({navigation, route}) => {
                             style={{
                                 width:20,
                                 height:20,
-                                tintColor: ( isFav || property.is_fav ) ? COLORS.primary : COLORS.gray
+                                tintColor: isFav ? COLORS.primary : COLORS.gray
                             }}
                         />
                     </TouchableOpacity>

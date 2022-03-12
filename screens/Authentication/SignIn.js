@@ -6,8 +6,6 @@ import {
     TouchableOpacity
 } from 'react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 // Utils
 import utils from '../../utils/Utils'
 import AuthLayout from './AuthLayout';
@@ -31,10 +29,12 @@ const SignIn = ({ navigation, route }) => {
     const dispatch = useDispatch()
 
     const [ username, setUsername ] = React.useState('')
+    // const [ email, setEmail ] = React.useState('')
     const [ password, setPassword ] = React.useState('')
     const [ saveMe, setSaveMe ] = React.useState(false)
 
     const [ usernameError, setUsernameError ] = React.useState('')
+    // const [ emailError, setEmailError ] = React.useState('')
     const [ passwordError, setPasswordError ] = React.useState('')
 
     const [ showPassword, setShowPassword ] = React.useState(false)
@@ -50,6 +50,7 @@ const SignIn = ({ navigation, route }) => {
         setIsLoading(true)
         const userData = {
             username: username.toLowerCase().trim(),
+            // email: email.trim(),
             password,
             saveMe
         };
@@ -72,7 +73,9 @@ const SignIn = ({ navigation, route }) => {
 
         if(selectLoggedInUser)
         {
-            navigation.navigate("Home")  
+            // navigation.replace("MainLayout")
+            // navigation.replace("Home", {isLoggedIn: selectLoggedInUser})
+            navigation.navigate("MainLayout", {isLoggedIn: selectLoggedInUser})  
         }
 
         return () => {
@@ -84,31 +87,12 @@ const SignIn = ({ navigation, route }) => {
         }
     }, [selectLoggedInUser])
 
-    React.useEffect(() => {
-        let mounted = true;
-            (async () => {
-                try{
-                    const token = await AsyncStorage.getItem('token')
-                    const userId = await AsyncStorage.getItem('userId')
-                    if(token && userId){
-                        if( mounted ) navigation.navigate("Home")
-                    }
-                }
-                catch(err){
-                    setIsLoading(false)
-                }
-            })()
-        
-        return () => {
-            mounted = false
-        }
-    }, [])
-
     return (
         <AuthLayout
             title="Let's Sign you in"
             subtitle="Welcome back, you have been missed"
         >
+            {/* Skip To Home Screen */}
             <SkipTextButton onPress={() => navigation.navigate("Home") } />
 
             <View
@@ -118,16 +102,18 @@ const SignIn = ({ navigation, route }) => {
                 }}
             >
 
+                {/* Form Input Section */}
+                {/* Username */}
                 <FormInput
                     label="Username"
                     keyboardType='default'
                     autoCapitalize='none'
                     onChange={(value) => {
+                        // Validate Username
                         utils.validateUsername(value, setUsernameError)
                         if(value.indexOf(' ') >= 0){
                             setUsernameError("No white spaces please, use '_' instead!")
                         }
-
                         setUsername(value)
                     }}
                     errorMsg={usernameError}
@@ -149,6 +135,7 @@ const SignIn = ({ navigation, route }) => {
                     }
                 />
                 
+                {/* Password */}
                 <FormInput
                     label="Password"
                     autoCompleteType='password'
@@ -159,7 +146,6 @@ const SignIn = ({ navigation, route }) => {
                     onChange={(value) => {
                         // Validate Password
                         utils.validatePassword(value, setPasswordError)
-
                         setPassword(value)
                     }}
                     errorMsg={passwordError}
@@ -184,6 +170,7 @@ const SignIn = ({ navigation, route }) => {
                     }
                 />
 
+                {/* Save me & forgot password section */}
                     <View
                         style={{
                             flexDirection:"row",
@@ -210,9 +197,10 @@ const SignIn = ({ navigation, route }) => {
 
                     </View>
 
+                {/* Sign In section */}
                 <TextButton
                     label={isLoading ? "Processing..." : "Sign In"}
-                    disabled={!isEnableSignIn() || isLoading}
+                    disabled={!isEnableSignIn()}
                     buttonContainerStyle={{
                         height:55,
                         alignItems:"center",
@@ -223,6 +211,7 @@ const SignIn = ({ navigation, route }) => {
                     onPress={signInHandler}
                 />
 
+                {/* Sign Up section */}
                 <View
                     style={{
                         flexDirection:"row",
@@ -235,9 +224,7 @@ const SignIn = ({ navigation, route }) => {
                             color:COLORS.darkGray,
                             ...FONTS.body3
                         }}
-                    >
-                        Don't have an account?
-                    </Text>
+                    >Don't have an account?</Text>
 
                     <TextButton
                         label="Sign Up"
@@ -254,13 +241,14 @@ const SignIn = ({ navigation, route }) => {
 
                 </View>
 
+                {/* Footer */}
                 <View
                     style={{
                         flex:1,
                         justifyContent:"flex-end"
                     }}
                 >
-
+                    {/* FaceBook */}
                     <TextIconButton
                         label="Continue With Facebook"
                         icon={icons.fb}
@@ -280,7 +268,7 @@ const SignIn = ({ navigation, route }) => {
                         }}
                         onPress={() => console.log("Facebook")}
                     />
-
+                    {/* Google */}
                     <TextIconButton
                         label="Continue With Google"
                         icon={icons.google}

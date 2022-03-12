@@ -145,11 +145,11 @@ const setAllRefetchPropertyData = ( reFetchedData ) => {
         payload: reFetchedData
     }
 }
-export const getAllRefetchPropertyData = () => {
+export const getAllRefetchPropertyData = ( userId = null ) => {
     return async (dispatch) => {
         try {
-            const userId = await AsyncStorage.getItem( "userId" );
-            const url = userId ? `${constants.ROOT_URL}/ahuse/api/v1/properties/?cu_id=${userId}` : `${constants.ROOT_URL}/ahuse/api/v1/properties`;
+            const userID = userId ? userId : await AsyncStorage.getItem( "userId" );
+            const url = userID ? `${constants.ROOT_URL}/ahuse/api/v1/properties/?cu_id=${userID}` : `${constants.ROOT_URL}/ahuse/api/v1/properties`;
             fetch( url, { method: "GET" } )
                 .then( res => res.json() )
                 .then( data => {
@@ -216,6 +216,7 @@ export const updateFavPropertyList = ( propertyId ) => {
             const token = await AsyncStorage.getItem( 'token' );
             const userId = await AsyncStorage.getItem( 'userId' );
             if( token, propertyId, userId ) {
+                console.log(token, propertyId, userId )
                 fetch(`${constants.ROOT_URL}/ahuse/api/v1/fav`, {
                     method: 'POST',
                     headers: {

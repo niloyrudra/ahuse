@@ -26,56 +26,46 @@ import { userSignOutAction } from '../store/user/userActions'
 
 const Drawer = createDrawerNavigator()
 
-const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, setSelectedTab }) => {
-    // console.log(route)
+const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab, selectedToken }) => {
     
     const dispatch = useDispatch()
     const [ isLoggedIn, setIsLoggedIn ] = React.useState(false)
-    const [ userName, setUserName ] = React.useState('')
-
-    // console.log(selectedToken)
+    const [ username, setUserName ] = React.useState('')
 
     React.useEffect(() => {
+        let mounted = true;
         (async () => {
-            const hasToken = await AsyncStorage.getItem("token")
-            const userName = await AsyncStorage.getItem("username")
-            if( hasToken && userName ) {
-                setIsLoggedIn(true)
-                setUserName(userName)
-            }
-            else {
-                setIsLoggedIn(false)
-                setUserName(userName)
+            if( mounted ) {
+                // const token = await AsyncStorage.getItem("token")
+                const userName = await AsyncStorage.getItem("username");
+                if( userName ) {
+                    setIsLoggedIn(true);
+                    setUserName( JSON.parse(userName) );
+                }
+                else {
+                    setUserName('');
+                    setIsLoggedIn(false);
+                }
             }
         })()
         return () => {
-            setIsLoggedIn(false)
-            setUserName('')
+            mounted = false;
+            setUserName('');
+            setIsLoggedIn(false);
         }
-    }, [])
-
-    React.useEffect(() => {
-        if(selectedToken) console.log( "Drawer Token -->>", selectedToken)
-        return () => {
-            setIsLoggedIn(false)
-        }
-    }, [selectedToken])
-    
-    // console.log("drawer--",hasToken())
+    }, []);
 
     return (
         <DrawerContentScrollView
             scrollEnabled={true}
             contentContainerStyle={{flex:1}}
         >
-            {/* Drawer Body */}
             <View
                 style={{
                     flex:1,
                     paddingHorizontal: SIZES.radius,
                 }}
             >
-                {/* Close */}
                 <View
                     style={{
                         alignItems: 'flex-start',
@@ -101,7 +91,6 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, se
                     </TouchableOpacity>
                 </View>
 
-                {/* Profile */}
                 <TouchableOpacity
                     style={{
                         flexDirection: "row",
@@ -109,13 +98,13 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, se
                         alignItems: "center"
                     }}
                     onPress={() => {
-                        if(!userName) return
+                        if(!username) return
                         setSelectedTab( constants.screens.profile )
                         navigation.navigate("MainLayout")
                     }}
                 >
                 {
-                    userName ?
+                    username && isLoggedIn ?
                     <>
                         <Image
                             source={images.profile}
@@ -129,7 +118,7 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, se
                         <View
                         style={{marginLeft: SIZES.radius}}>
                             <Text style={{color: COLORS.white, ...FONTS.h3 }}
-                            >{ JSON.parse(userName) }</Text>
+                            >{username}</Text>
                             <Text style={{color:COLORS.white, ...FONTS.body4}}>View your profile</Text>
                         </View>
                     </>
@@ -154,7 +143,6 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, se
                 }
                 </TouchableOpacity>
 
-                {/* Drawer Items */}
                 <View
                     style={{
                         flex:1,
@@ -210,7 +198,6 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, se
                         }}
                     />
 
-                     {/* Line Divider */}
                      <View
                         style={{
                             height:1,
@@ -220,29 +207,28 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, se
                         }}
                     />
 
-                    {/* Coupon */}
                     <CustomDrawerItem
                         label="Coupon"
                         icon={icons.coupon}
-                        // onPress={() => navigation.navigate("Settings")}
+                        onPress={() => console.log("Settings")}
                     />
                     {/* Settings */}
                     <CustomDrawerItem
                         label="Settings"
                         icon={icons.setting}
-                        // onPress={() => navigation.navigate("Settings")}
+                        onPress={() => console.log("Settings")}
                     />
                     {/* Invite friends */}
                     <CustomDrawerItem
                         label="Invite a friend"
                         icon={icons.profile}
-                        // onPress={() => navigation.navigate("Settings")}
+                        onPress={() => console.log("Settings")}
                     />
                     {/* Help Center */}
                     <CustomDrawerItem
                         label="Help Center"
                         icon={icons.help}
-                        // onPress={() => navigation.navigate("Settings")}
+                        onPress={() => console.log("Settings")}
                     />
 
                 </View>
@@ -259,11 +245,14 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, se
                             label="Logout"
                             icon={icons.logout}
                             onPress={() => {
-                                dispatch( userSignOutAction() )
                                 setIsLoggedIn(false)
+                                setUserName('')
+                                dispatch( userSignOutAction() )
                                 navigation.closeDrawer()
                                 console.log("logged out")
-                                navigation.navigate("Auth")
+                                navigation.navigate("Home")
+                                // setSelectedTab( constants.screens.home )
+                                // navigation.navigate("MainLayout")
                             }}
                         />
                         :
@@ -285,7 +274,22 @@ const CustomDrawerContent = ({ navigation, route, selectedTab, selectedToken, se
     )
 }
 
-const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
+const DrawerNavigator = ( { navigation, route, selectedTab, setSelectedTab, selectedToken } ) => {
+
+    // const  [ isLoggedIn, setIsLoggedIn ] = React.useState(true)
+
+    // React.useEffect( () => {
+    //     let mounted = true;
+    //     console.log("route.....", route)
+    //     if( route?.params?.isLoggedIn ) {
+    //         if( mounted ) setIsLoggedIn( true )
+    //     }
+    //     return () => {
+    //         mounted = false;
+    //         setIsLoggedIn( false )
+    //     }
+    // }, [] );
+
     return (
         <View
             style={{
@@ -315,6 +319,7 @@ const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
                             {...props}
                             selectedTab={selectedTab}
                             setSelectedTab={setSelectedTab}
+                            selectedToken={selectedToken}
                         />
                     )
                 }}
@@ -337,9 +342,6 @@ const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
                         gestureEnabled:false
                     }} />}
                 </Drawer.Screen>
-                {/* <Drawer.Screen name="Success" component={Success} options={{
-                        gestureEnabled:false
-                    }} /> */}
 
             </Drawer.Navigator>
         </View>
@@ -347,7 +349,6 @@ const DrawerNavigator = ( { selectedTab, setSelectedTab } ) => {
 }
 
 function mapStateToProps( state ) {
-    // console.log(state?.userReducer)
     return {
         selectedTab: state?.tabReducer?.selectedTab?.tabPayload,
         selectedToken: state?.userReducer?.token,

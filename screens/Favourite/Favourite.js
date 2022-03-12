@@ -36,7 +36,7 @@ const Favourite = ({navigation, selectedProperties, setAllProperties }) => {
     React.useEffect(() => {
         if(selectedProperties && userId)
         {
-            const properties = selectedProperties.filter( item => item.is_fav == 1 )
+            const properties = selectedProperties.filter( item => item.is_fav !== null )
             setFavProperties( properties );
         }
         return () => {

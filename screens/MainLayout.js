@@ -123,6 +123,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
     React.useEffect(() => {
         // let controller = new AbortController();
         let isMounted = true;
+        console.log(selectedToken)
         if(isMounted){
             if(selectedToken) {
                 setIsLoggedIn(true)
@@ -245,7 +246,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                 try{
                     const token = await AsyncStorage.getItem('token')
                     const userId = await AsyncStorage.getItem('userId')
-                    console.log("MAIN_LAYOUT",userId,token)
+                    console.log("[MAIN_LAYOUT]")
                     if(token || userId){
                         // console.log(token)
                         if( mounted ) setIsLoggedIn(true)
@@ -441,12 +442,12 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                                     width: SIZES.width
                                 }}
                             >
-                                {item.label == constants.screens.home && <Home navigation={navigation} allProperties={properties} categories={categories} />}
-                                {item.label == constants.screens.search && <Search navigation={navigation} />}
-                                {item.label == constants.screens.addProp && <AddProperty navigation={navigation} />}
-                                {item.label == constants.screens.favourite && <Favourite navigation={navigation} />}
-                                {item.label == constants.screens.notification && <Notification navigation={navigation} />}
-                                {item.label == constants.screens.profile && <Profile navigation={navigation} onSwitch={() => setSelectedTab( constants.screens.addProp )} />}
+                                {item.label == constants.screens.home && <Home navigation={navigation} allProperties={properties} setSelectedTab={setSelectedTab} categories={categories} />}
+                                {item.label == constants.screens.search && <Search navigation={navigation} setSelectedTab={setSelectedTab} />}
+                                {item.label == constants.screens.addProp && <AddProperty navigation={navigation} setSelectedTab={setSelectedTab} />}
+                                {item.label == constants.screens.favourite && <Favourite navigation={navigation} setSelectedTab={setSelectedTab} />}
+                                {item.label == constants.screens.notification && <Notification navigation={navigation} setSelectedTab={setSelectedTab} />}
+                                {item.label == constants.screens.profile && <Profile navigation={navigation} setSelectedTab={setSelectedTab} onSwitch={() => setSelectedTab( constants.screens.addProp )} />}
 
                             </View>
                         )

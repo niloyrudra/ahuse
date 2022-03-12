@@ -7,13 +7,14 @@ import { getAllProperties } from '../../store/property/propertyActions';
 import { COLORS ,FONTS ,SIZES } from '../../constants/theme';
 import images from '../../constants/images';
 import icons from '../../constants/icons';
+import constants from '../../constants/constants';
 
 import LineDivider from '../../components/LineDivider';
 import HorizontalCard from '../../components/HorizontalCard';
 import HeaderWithItemNum from '../../components/HeaderWithItemNum';
 import TextButton from '../../components/TextButton';
 
-const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) => {
+const Profile = ({navigation, selectedProperties, setAllProperties, setSelectedTab, onSwitch}) => {
 
     const [ email, setEmail ] = React.useState('')
     const [ username, setUsername ] = React.useState('')
@@ -22,18 +23,23 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
     const [ ownedProperties, setOwnedProperties ] = React.useState([])
 
     React.useEffect(() => {
+        console.log( "[profile - user data]" )
         let mounted = true;
         (async () => {
             try{
-                const userId = await AsyncStorage.getItem("userId")
-                const email = await AsyncStorage.getItem("email")
-                const name = await AsyncStorage.getItem("username")
-                const displayName = await AsyncStorage.getItem("displayName")
+                const userID = await AsyncStorage.getItem("userId");
+                const email = await AsyncStorage.getItem("email");
+                const name = await AsyncStorage.getItem("username");
+                const displayName = await AsyncStorage.getItem("displayName");
                 if( mounted ) {
-                    if(displayName) setDisplayName(displayName)
-                    if(userId) setUserId(userId)
-                    if(name) setUsername(name)
-                    if(email) setEmail(email)
+                    if(displayName) setDisplayName( JSON.parse( displayName ) );
+                    if(userID) setUserId( JSON.parse( userID ));
+                    if(name) setUsername( JSON.parse( name ));
+                    if(email) setEmail( JSON.parse( email ));
+                }
+                if(!userID) {
+                    setSelectedTab( constants.screens.home )
+                    navigation.navigate("MainLayout")
                 }
             }
             catch(err){
@@ -46,9 +52,8 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
         return () => mounted = false
     }, [])
 
-
-
     React.useEffect(() => {
+        console.log( "[profile - properties]" )
         if(selectedProperties && userId)
         {
             const properties = selectedProperties.filter( item => item.publisher_id == userId )
@@ -88,6 +93,29 @@ const Profile = ({navigation, selectedProperties, setAllProperties, onSwitch}) =
                             username !== '' &&
                             (
                                 <Text style={{color:COLORS.darkGray,...FONTS.h1,marginTop:SIZES.padding}}>Hello! {username}</Text>
+                            )
+                        }
+                        {
+                            email !== '' &&
+                            (
+                                <View
+                                    style={{
+                                        flexDirection:"row",
+                                        marginVertical:SIZES.radius
+                                    }}
+                                >
+                                    <Image
+                                        source={icons.envelope2}
+                                        resizeMode="contain"
+                                        style={{
+                                            width:20,
+                                            height:20,
+                                            tintColor:COLORS.darkGray,
+                                            marginRight:SIZES.radius
+                                        }}
+                                    />
+                                    <Text style={{color:COLORS.darkGray,...FONTS.h3}}>{email}</Text>
+                                </View>
                             )
                         }
         
