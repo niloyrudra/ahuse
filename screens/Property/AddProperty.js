@@ -45,7 +45,6 @@ const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
     });
 
     React.useEffect(() => {
-        // console.log( "Add Property Screen | User ID >>", selectedUserId );
         if( selectedUserId ) {
             setUserId( selectedUserId )
             setUserID( selectedUserId )
@@ -473,7 +472,6 @@ const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
                 <Text style={styles.header}>Featured Property</Text>
                 <SwitchButtonComponent name="featured" label="Featured Property Setup" control={control} customLabelCss={{textTransform:"capitalize"}} isFeatured={true} />
 
-                <Text style={styles.header}>Amenties and Features</Text>
                 {
                     features &&
                     <View>
@@ -481,10 +479,15 @@ const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
                             style={{flex:1}}
                             data={features}
                             keyExtractor={item => `${item.id}`}
+                            ListHeaderComponent={
+                                <Text style={styles.header}>Amenties and Features</Text>
+                            }
                             renderItem={ ( { item, index } ) =>(
                                 <SwitchButtonComponent name={item.slug} label={item.name} control={control} onChange={() => onChange(value)} customLabelCss={{textTransform:"capitalize"}} />
                             )}
-
+                            ListFooterComponent={
+                                <View style={{height:50}} />
+                            }
                         />
                     </View>
                 }
