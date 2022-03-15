@@ -7,7 +7,8 @@ import {
     TextInput,
     FlatList,
     ActivityIndicator,
-    Switch
+    Switch,
+    Dimensions
 } from 'react-native';
 
 import { connect } from 'react-redux'
@@ -50,6 +51,7 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
     const [ catTaxonomies, setCatTaxonomies ] = React.useState([])
     const [ areaTaxonomies, setAreaTaxonomies ] = React.useState([])
     const [ isLoading, setIsLoading ] = React.useState(false)
+    const [ isCatLoading, setIsCatLoading ] = React.useState(false)
     const [ isSales, setIsSales ] = React.useState(false)
     const [ isRental, setIsRental ] = React.useState(false)
 
@@ -58,7 +60,6 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
     const [showSearchResultModal, setShowSearchResultModal] = React.useState(false)
 
     React.useEffect(() => {
-        setIsLoading(true)
         if(allTaxData) {
             if( allTaxData.action_cat ) setTypeTaxonomies( allTaxData.action_cat.filter( item => item.count > 0 ) )
             if( allTaxData.cat ) {
@@ -67,24 +68,29 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
             }
             if( allTaxData.area ) setAreaTaxonomies( allTaxData.area.filter( item => item.count > 0 ) )
 
-            setIsLoading(false)
         }
     }, [allTaxData])
 
     React.useEffect(() => {
+        setIsCatLoading(true)
         if( catTaxonomies && catTaxonomies[0]){
             setSelectedCategoryId( catTaxonomies[0].id )
             getPropertiesByCategoryHandler(  catTaxonomies[0].id )
+            setIsCatLoading(false)
         }
+        return () => setIsCatLoading(false)
     },[catTaxonomies])
 
     React.useEffect(() => {
+        setIsLoading(true)
         if( allProperties.length > 0 ) {
             setRecommendedProperty(allProperties.filter( i => i.recommended == 1 ))
+            setIsLoading( false )
         }
         else {
             dispatch( getAllRefetchPropertyData() )
         }
+        return () => setIsLoading(false);
     },[allProperties])
 
     React.useEffect(() => {
@@ -308,46 +314,79 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
     }
 
     const renderCatSection = () => {
-        return (
+        if (isCatLoading ) {    
+            return (
             <FlatList
                 horizontal
-                data={catTaxonomies}
-                keyExtractor={item => `${item.id}`}
+                data={[1,2,3,4,6,7]}
+                keyExtractor={item => `${item}`}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={{
                     marginTop: 30,
                     marginBottom: 20
                 }}
                 renderItem={ ( { item, index } ) => (
-                    <TouchableOpacity
+                    <View
                         style={{
                             flex:1,
                             height: 55,
+                            width: 90,
                             marginTop: SIZES.padding,
                             marginLeft: index == 0 ? SIZES.padding : SIZES.radius,
                             marginRight: index == catTaxonomies.length - 1 ? SIZES.padding : 0,
                             paddingHorizontal: 8,
                             borderRadius: SIZES.radius,
-                            backgroundColor: selectedCategoryId == item.id ? COLORS.primary : COLORS.lightGray2,
+                            backgroundColor: COLORS.lightGray2,
                             justifyContent:"center",
                             alignItems:"center"
                         }}
-                        onPress={() => handleChangeTax( item.id, typeId )}
-                    >
-                        <Text
-                            style={{
-                                color: selectedCategoryId == item.id ? COLORS.white : COLORS.darkGray,
-                                alignSelf: 'center',
-                                marginRight: SIZES.base,
-                                ...FONTS.h3
-                            }}
-                        >
-                            {item.name}
-                        </Text>
-                    </TouchableOpacity>
+                    />
                 )}
-            />
-        )
+            />)
+        }
+        else {
+            return (
+                <FlatList
+                    horizontal
+                    data={catTaxonomies}
+                    keyExtractor={item => `${item.id}`}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{
+                        marginTop: 30,
+                        marginBottom: 20
+                    }}
+                    renderItem={ ( { item, index } ) => (
+                        <TouchableOpacity
+                            style={{
+                                flex:1,
+                                height: 55,
+                                marginTop: SIZES.padding,
+                                marginLeft: index == 0 ? SIZES.padding : SIZES.radius,
+                                marginRight: index == catTaxonomies.length - 1 ? SIZES.padding : 0,
+                                paddingHorizontal: 8,
+                                borderRadius: SIZES.radius,
+                                backgroundColor: selectedCategoryId == item.id ? COLORS.primary : COLORS.lightGray2,
+                                justifyContent:"center",
+                                alignItems:"center"
+                            }}
+                            onPress={() => handleChangeTax( item.id, typeId )}
+                        >
+                            <Text
+                                style={{
+                                    color: selectedCategoryId == item.id ? COLORS.white : COLORS.darkGray,
+                                    alignSelf: 'center',
+                                    // marginRight: SIZES.base,
+                                    marginHorizontal: SIZES.base,
+                                    ...FONTS.h3
+                                }}
+                            >
+                                {item.name}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                />
+            )
+        }
     }
 
     const renderTypes = () => {
@@ -418,69 +457,48 @@ const Home = ( { navigation, allProperties, setAllCats } ) => {
                     onClose={() => setShowSearchResultModal(false)}
                 />
             }
-            {/* {showSearchResultModal &&
-                <SearchModal
-                    refEle={searchRef}
-                    navigation={navigation}
-                    isVisible={showSearchResultModal}
-                    searchResultData={ searchResultData }
-                    query={searchQuery}
-                    onClose={() => setShowSearchResultModal(false)}
-                />
-            } */}
 
-            {
-                isLoading
-                    ?
-                    <ActivityIndicator
-                        animating={isLoading}
-                        size="large"
-                        color={COLORS.primary}
-                    />
-                    :
+            <FlatList
+                data={propertiesByType}
+                keyExtractor={item => `${item.id}`}
+                showsVerticalScrollIndicator={false}
+                ListHeaderComponent={
+                    <View>
+                        {renderLocationSection()}
 
-                    <FlatList
-                        data={propertiesByType}
-                        keyExtractor={item => `${item.id}`}
-                        showsVerticalScrollIndicator={false}
-                        ListHeaderComponent={
-                            <View>
-                                {renderLocationSection()}
+                        {renderCatSection()}
 
-                                {renderCatSection()}
+                        <PopularSection navigation={navigation} data={recommendedProperty} catId={selectedCategoryId} isLoading={isLoading} />
 
-                                <PopularSection navigation={navigation} data={recommendedProperty} catId={selectedCategoryId} />
+                        <RecommendedSection navigation={navigation} data={recommendedProperty} catId={selectedCategoryId} isLoading={isLoading} />
 
-                                <RecommendedSection navigation={navigation} data={recommendedProperty} catId={selectedCategoryId} />
+                        {renderTypes()}
 
-                                {renderTypes()}
-
-                            </View>
-                        }
-                        renderItem={( { item, index } ) => (
-                                <HorizontalCard
-                                    containerStyle={{
-                                        height:130,
-                                        alignItems:"center",
-                                        marginHorizontal: SIZES.padding,
-                                        marginBottom: SIZES.radius
-                                    }}
-                                    imageStyle={{
-                                        margin: 10,
-                                        height:110,
-                                        width:110,
-                                        borderRadius: SIZES.radius
-                                    }}
-                                    item={item}
-                                    onPress={() => navigation.navigate("PropertyDetail", {item:item})}
-                                />
-                            )                          
-                        }
-                        ListFooterComponent={
-                            <View style={{height:200}} />
-                        }
-                    />
-            }
+                    </View>
+                }
+                renderItem={( { item, index } ) => (
+                        <HorizontalCard
+                            containerStyle={{
+                                height:130,
+                                alignItems:"center",
+                                marginHorizontal: SIZES.padding,
+                                marginBottom: SIZES.radius
+                            }}
+                            imageStyle={{
+                                margin: 10,
+                                height:110,
+                                width:110,
+                                borderRadius: SIZES.radius
+                            }}
+                            item={item}
+                            onPress={() => navigation.navigate("PropertyDetail", {item:item})}
+                        />
+                    )                          
+                }
+                ListFooterComponent={
+                    <View style={{height:200}} />
+                }
+            />
 
         </View>
     )

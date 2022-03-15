@@ -1,11 +1,43 @@
 import React from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, View } from 'react-native'
 import Section from './Section'
 import HorizontalCard from './HorizontalCard'
 
-import { SIZES } from '../constants/theme'
+import { COLORS, SIZES } from '../constants/theme'
 
-const RecommendedSection = ({navigation, data}) => {
+const RecommendedSection = ({navigation, data, isLoading=null}) => {
+    if(isLoading) {
+        return (
+            <Section
+                title="Popular Properties"
+                onPress={() => {}}
+            >
+                <FlatList
+                    data={[1,2,3]}
+                    keyExtractor={item => `${item}`}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={ ({  item, index }) => (
+                        <>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    borderRadius: SIZES.radius,
+                                    backgroundColor: COLORS.lightGray2,
+                                    height:180,
+                                    width: SIZES.width * 0.85,
+                                    marginLeft: index == 0 ? SIZES.padding : 18,
+                                    marginRight: index == data.length - 1 ? SIZES.padding : 0,
+                                    paddingRight: SIZES.radius,
+                                    alignItems: "center"
+                                }}
+                            />
+                        </>
+                    )}
+                />
+            </Section>
+        )
+    }
 
     return (
         <Section

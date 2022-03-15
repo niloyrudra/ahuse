@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Ahuse",
-    "slug": "ahuseApp",
+    "name": "Ahuse Ltd",
+    "slug": "ahuseLtdApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/Ahuse_splash.png",
@@ -20,7 +20,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "ahuse.co.uk.ahuseapp",
+      "package": "niloyrudra.ahuseltdapp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/Ahuse_splash.png",
         "backgroundColor": "#ffffff"
