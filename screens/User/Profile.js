@@ -23,6 +23,7 @@ const Profile = ({navigation, selectedProperties, selectedUsername, selectedUser
     const [ ownedProperties, setOwnedProperties ] = React.useState([])
 
     React.useEffect( () => {
+        console.log(selectedUserId)
         if( selectedUsername ) setUsername( selectedUsername )
         if( selectedUserId ) setUserId( selectedUserId )
         if( selectedEmail ) setEmail( selectedEmail )
@@ -38,6 +39,7 @@ const Profile = ({navigation, selectedProperties, selectedUsername, selectedUser
 
     React.useEffect(() => {
         console.log( "[profile - properties]" )
+        console.log( userId )
         if(selectedProperties && userId)
         {
             const properties = selectedProperties.filter( item => item.publisher_id == userId )

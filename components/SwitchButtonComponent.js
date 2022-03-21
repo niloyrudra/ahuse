@@ -4,6 +4,7 @@ import { Controller } from 'react-hook-form';
 import { COLORS } from '../constants/theme';
 
 const SwitchButtonComponent = ( props ) => {
+    const currentValue = React.useRef(false)
     return (
         <View style={{
             flex:1,
@@ -18,9 +19,23 @@ const SwitchButtonComponent = ( props ) => {
                 name={ props.name }
                 render={({ field: { onChange, onBlur, value  }}) => (
                     <Switch
+                        // ref={props.stripeRef}
                         trackColor={{ false: COLORS.gray3, true: COLORS.primary }}
                         thumbColor={value ? COLORS.primary : "#f4f3f4"}
-                        onValueChange={ val => onChange(val)}
+                        onValueChange={ val => {
+                            if( props.handleStripeModal ) {
+                                props.handleStripeModal(val)
+                            }
+
+                            // if(props?.stripeRef?.current == null) props.stripeRef.current = true
+                            // // }
+                            // // currentValue.current = val
+                            // console.log("value",val)
+                            console.log("stripeRef Value >>",props?.stripeRef?.current)
+
+                            if(props?.stripeRef?.current === false  ) onChange(false)
+                            else onChange(val)
+                        }}
                         value={value}
                     />
                 )}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, TouchableOpacity, Image} from 'react-native'
 import { createDrawerNavigator, DrawerContentScrollView, useDrawerProgress, useDrawerStatus } from '@react-navigation/drawer'
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Screens
 
@@ -40,6 +40,38 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab, selected
             setIsLoggedIn(true);
         }
     }, [selectedUserId, selectedUsername])
+
+    React.useEffect(() => {
+        let mounted = true;
+        if(!isLoggedIn) {
+            (async () => {
+                try{
+                    const token = await AsyncStorage.getItem('token')
+                    const username = await AsyncStorage.getItem('username')
+                    console.log("[DRAWER_LAYOUT]")
+                    if(token && username){
+                        console.log(token)
+                        if( mounted ) {
+                            setIsLoggedIn(true)
+                            setUserName(username)
+                        }
+                    }
+                    else{
+                        if( mounted ) {
+                            setIsLoggedIn(false)
+                            setUserName('')
+                        }
+                    }
+                }
+                catch(err){
+                    setIsLoggedIn(false)
+                }
+            })()
+        }
+        return () => {
+            mounted = false
+        }
+    }, [])
 
     return (
         <DrawerContentScrollView
@@ -90,7 +122,7 @@ const CustomDrawerContent = ({ navigation, selectedTab, setSelectedTab, selected
                     }}
                 >
                 {
-                    username && isLoggedIn ?
+                    username || isLoggedIn ?
                     <>
                         <Image
                             source={images.profile}

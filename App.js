@@ -5,6 +5,9 @@ import React from "react";
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
 
+// Stripe Provider
+import { StripeProvider } from '@stripe/stripe-react-native';
+
 // Redux
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from "react-redux";
@@ -13,6 +16,9 @@ import rootReducer from "./store/rootReducer";
 
 // Navigator
 import AppNavigator from './navigation/AppNavigator';
+
+import constants from './constants/constants';
+
 
 // Store
 const store = createStore( rootReducer, applyMiddleware( thunk ) )
@@ -30,9 +36,15 @@ const App = () => {
         return <AppLoading />;
     } else {
         return (
-            <Provider store={store}>
-                <AppNavigator />
-            </Provider>
+            <StripeProvider
+                publishableKey={constants.PUBLISHABLE_KEY}
+            >
+
+                <Provider store={store}>
+                    <AppNavigator />
+                </Provider>
+
+            </StripeProvider>
         )
     }
 }

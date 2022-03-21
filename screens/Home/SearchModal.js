@@ -16,6 +16,7 @@ import TextButton from '../../components/TextButton';
 import HorizontalCard from '../../components/HorizontalCard'
 
 const SearchModal = ({ navigation, refEle, isVisible, searchResultData, query, onClose }) => {
+    
     const modelAnimatedValue = React.useRef( new Animated.Value(0) ).current
 
     const [ searchResult, setSearchResult ] = React.useState([])

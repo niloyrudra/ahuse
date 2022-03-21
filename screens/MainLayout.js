@@ -247,8 +247,8 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                     const token = await AsyncStorage.getItem('token')
                     const userId = await AsyncStorage.getItem('userId')
                     console.log("[MAIN_LAYOUT]")
-                    if(token || userId){
-                        // console.log(token)
+                    if(token && userId){
+                        console.log(token)
                         if( mounted ) setIsLoggedIn(true)
                     }
                     else{
@@ -361,6 +361,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
             }}
         >
 
+            {/* Header */}
             <Header
                 containerStyle={{
                     height:50,
@@ -412,7 +413,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                 }
             />
 
-
+            {/* Bottom Tab Screen Definers */}
             <View
                 style={{
                     flex:1
@@ -455,7 +456,7 @@ const MainLayout = ( {navigation, selectedTab, selectedCats, selectedProperties,
                 ></FlatList>
             </View>
 
-
+            {/* Bottom Custom Tab Section */}
             <View
                 style={{
                     height:100,
