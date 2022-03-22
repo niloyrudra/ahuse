@@ -17,6 +17,7 @@ import rootReducer from "./store/rootReducer";
 // Navigator
 import AppNavigator from './navigation/AppNavigator';
 
+// Constants
 import constants from './constants/constants';
 
 
@@ -39,11 +40,9 @@ const App = () => {
             <StripeProvider
                 publishableKey={constants.PUBLISHABLE_KEY}
             >
-
                 <Provider store={store}>
                     <AppNavigator />
                 </Provider>
-
             </StripeProvider>
         )
     }

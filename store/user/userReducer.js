@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_USER_DATA_SUCCESS, SIGN_IN_USER_DATA_FAIL, SIGN_IN_FAIL, SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAIL, LOG_OUT, SET_TEMP_TOKEN, SET_USER_ID } from "./userActions";
+import { SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_USER_DATA_SUCCESS, SIGN_IN_USER_DATA_FAIL, SIGN_IN_FAIL, SIGN_UP, SIGN_UP_SUCCESS, SIGN_UP_FAIL, LOG_OUT, SET_TEMP_TOKEN, SET_USER_ID, RESET_PASSWORD_FAIL } from "./userActions";
 
 const initialState = {
     users: [],
@@ -64,6 +64,7 @@ const userReducer = ( state = initialState, action ) => {
             }
         case SIGN_IN_FAIL:
         case SIGN_IN_USER_DATA_FAIL:
+        case RESET_PASSWORD_FAIL:
             return {
                 ...state,
                 isLoading: false,

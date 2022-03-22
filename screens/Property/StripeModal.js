@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, TextInput, View, StyleSheet, Animated, TouchableWithoutFeedback, Modal, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { Text, TextInput, View, StyleSheet, Animated, TouchableWithoutFeedback, Modal, Alert } from 'react-native'
 
 // Constants
 import constants from '../../constants/constants';
@@ -12,10 +12,12 @@ import TextButton from '../../components/TextButton';
 
 import { CardField, useConfirmPayment, useStripe } from '@stripe/stripe-react-native';
 
-const StripeModal = ({refEle, isVisible, onClose}) => {
+// const StripeModal = ({isFeaturedAllowedHandler, isVisible, onClose}) => {
+const StripeModal = ({ isFeaturedAllowedHandler, setFeaturedValue, isVisible, onClose }) => {
 
     const modelAnimatedValue = React.useRef( new Animated.Value(0) ).current
     // const modalRef = React.useRef( false )
+    // console.log( "Ref Status >>", refEl.current.value)
 
     const [ showStripeModal, setShowStripeModal ] = React.useState(isVisible)
     const [name, setName] = React.useState();
@@ -48,26 +50,8 @@ const StripeModal = ({refEle, isVisible, onClose}) => {
         outputRange: [SIZES.height, SIZES.height - 680]
     })
 
-
     // Handler
-    const fetchPaymentIntentClientSecret = async () => {
-        const response = await fetch(`${constants.API_URL}/create-payment-intent?amount=${amount}&name=${name}&email=${email}`, {
-          method: "POST",
-          headers: {
-            "Accept": 'application/json, text/plain, */*',
-            "Content-Type": "application/json",
-          },
-        //   body: JSON.stringify({ amount, name, email })
-        });
-        // const { clientSecret, error } = await response.json();
-        const { clientSecret } = await response.json();
-        // const res = await response.text();
-
-        return { clientSecret };
-    };
-
     const handlePayPress = async () => {
-        console.log("Triggered Pay Button")
         try {
           const finalAmount = parseInt(amount);
           if (finalAmount < 1) return Alert.alert("You cannot pay below 1 EUR");
@@ -82,9 +66,9 @@ const StripeModal = ({refEle, isVisible, onClose}) => {
 
           const data = await response.json();
 
-          if (data.message) {
-            Alert.alert(data.message);
-          }
+        //   if (data.message) {
+        //     Alert.alert(data.message);
+        //   }
           if (data.clientSecret) {
                 const initSheet = await stripe.initPaymentSheet({
                     paymentIntentClientSecret: data.clientSecret,
@@ -102,61 +86,38 @@ const StripeModal = ({refEle, isVisible, onClose}) => {
                     console.error(presentSheet.error);
                     return Alert.alert(presentSheet.error.message);
                 }
-                Alert.alert("Pay successfully! Thank you.");
 
+                isFeaturedAllowedHandler(true)
+                
+                Alert.alert(
+                    "Payment successful!",
+                    "Thank you.",
+                    [
+                        {
+                            text: "Great",
+                            onPress: () => {
+                                isFeaturedAllowedHandler(true);
+                                setFeaturedValue( 'featured', true);
+                            }
+                        }
+                    ]
+                );
+                
                 // Close the Modal
                 setShowStripeModal(false)
+                
+                // setFeaturedValue( 'featured', true)
             }
           
         } catch (err) {
           console.error(err);
           Alert.alert(["Sorry", "Payment failed!"]);
         }
-      };
+    };
 
-    //   const handlePayPress = async () => {
-    //     //1.Gather the customer's billing information (e.g., email)
-    //     if (!cardDetails?.complete || !email || !name) {
-    //       Alert.alert("Please enter Complete card details");
-    //       return;
-    //     }
-    //     const billingDetails = {
-    //       name: name,
-    //       email: email,
-    //     };
-    //     //2.Fetch the intent client secret from the backend
-    //     try {
-    //         console.log("start sending request....")
-    //         const { clientSecret } = await fetchPaymentIntentClientSecret();
-    //         console.log("getting resolve....")
-
-    //       console.log(clientSecret);
-
-    //       //2. confirm the payment
-    //     //   if (error) {
-    //       if (!clientSecret) {
-    //         console.log("Unable to process payment");
-    //       } else {
-    //         const { paymentIntent, error } = await confirmPayment(clientSecret, {
-    //           type: "Card",
-    //           billingDetails: billingDetails,
-    //         });
-    //         if (error) {
-    //           alert(`Payment Confirmation Error ${error.message}`);
-    //         } else if (paymentIntent) {
-    //           alert("Payment Successful");
-    //           console.log("Payment successful ", paymentIntent);
-    //         }
-    //       }
-    //     } catch (e) {
-    //       console.log("Request Failing....", e);
-    //     }
-    //     //3.Confirm the payment with the card details
-    //   };
-
-  return (
+    return (
         <Modal
-            // ref={modalRef}
+            // ref={refEle}
             animationType='fade'
             transparent={true}
             visible={isVisible}
@@ -168,7 +129,12 @@ const StripeModal = ({refEle, isVisible, onClose}) => {
                 }}
             >
                 <TouchableWithoutFeedback
-                    onPress={() => setShowStripeModal(false)}
+                    onPress={() => {
+                        // isFeaturedAllowedHandler(false)
+                        // refEl.current.value = false
+                        setFeaturedValue( 'featured', false)
+                        setShowStripeModal(false)
+                    }}
                 >
                     <View
                         style={{
@@ -216,9 +182,10 @@ const StripeModal = ({refEle, isVisible, onClose}) => {
                                 tintColor: COLORS.gray2
                             }}
                             onPress={() => {
-                                refEle.current=false
+                                // refEl.current.value = false
+                                setFeaturedValue( 'featured', false)
                                 setShowStripeModal(false)
-                                // console.log(modalRef.current)
+                                
                             }}
                         />                        
                     </View>

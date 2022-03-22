@@ -19,6 +19,9 @@ export const LOG_OUT = "LOG_OUT"
 
 export const SET_USER_ID = "SET_USER_ID"
 
+export const RESET_PASSWORD_SUCCESS = "RESET_PASSWORD_SUCCESS"
+export const RESET_PASSWORD_FAIL = "RESET_PASSWORD_FAIL"
+
 
 // Local Storage
 import axios from 'axios'
@@ -203,6 +206,37 @@ export const userSignInAction = ( userData, setIsLoading ) => {
             console.log("User Login err >>", err)
         }
     };
+}
+
+// RESET PASSWORD ACTION
+export const sentResetPasswordRequest = ( email, setResponseMsg, setIsLoading ) => {
+    return async (dispatch) => {
+        try{
+            const response = await fetch( `${constants.ROOT_URL}/ahuse/api/v1/users/forgot_password?email=${email}`, {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+            } );
+
+            const resJson = await response.json();
+            console.log(resJson)
+            if( resJson.status == 200 ){
+                if( resJson.message ) {
+                    setResponseMsg( resJson.message )
+                    console.log(resJson.message)
+                }
+            }
+
+            dispatch({ type: RESET_PASSWORD_SUCCESS })
+        }
+        catch(err) {
+            console.log("Reset Password fail >>", err)
+            dispatch({ type: RESET_PASSWORD_FAIL, error: err })
+        }
+        setIsLoading(false)
+    }
 }
 
 // SIGN_OUT ACTION

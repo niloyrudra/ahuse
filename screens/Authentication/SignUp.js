@@ -55,7 +55,7 @@ const SignUp = ({ navigation, route }) => {
         {
             setIsLoading(true)
             setHasToken(true)
-            navigation.replace("Home")
+            navigation.replace("Drawer")
         }
     }, [selectLoggedInUser])
 
@@ -93,7 +93,7 @@ const SignUp = ({ navigation, route }) => {
             title="Let's Sign you up"
             subtitle="Create an account to continue."
         >
-            <SkipTextButton onPress={() => navigation.navigate("Home") } />
+            <SkipTextButton onPress={() => navigation.navigate("Drawer") } />
 
             <View
                 style={{

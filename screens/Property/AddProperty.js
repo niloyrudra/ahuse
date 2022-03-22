@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, FlatList, Image, Alert } from 'react-native';
+import { Text, View, StyleSheet, FlatList, Image, Alert, Switch } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -24,7 +24,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import GooglePlacesInput from '../../components/GoogleAutoCompleteInput';
 
 // Stripe Provider
-// import { StripeProvider } from '@stripe/stripe-react-native';
 import StripeModal from './StripeModal';
 
 const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
@@ -32,6 +31,9 @@ const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
     const stripeRef = React.useRef();
 
     const dispatch = useDispatch()
+
+    const [isAllowingFeatured, setIsAllowingFeatured] = React.useState(false);
+
     const [userId, setUserID] = React.useState(null);
     const [isLoggedIn, setIsLoggedIn] = React.useState(false);
     const [token, setToken] = React.useState('')
@@ -157,12 +159,6 @@ const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
           storage:'',
           recreation:'',
           "roof-deck":'',
-        //   "header_type":false,
-        //   min_height:false,
-        //   max_height:false,
-        //   keep_min:false,
-        //   keep_max:false,
-        //   pageCustomImage:false,
           internet:false,
         },
         mode: 'onBlur'
@@ -224,6 +220,11 @@ const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
             setFeatures(selectedFeature)
         }
     }, [selectedFeature])
+
+    React.useEffect(() => {
+        console.log("Add Screen >> ", isAllowingFeatured)
+        if(isAllowingFeatured) setValue("featured", isAllowingFeatured);
+    }, [isAllowingFeatured])
 
     // Submit Handler
     const onSubmit = data => {
@@ -478,9 +479,59 @@ const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
                     <TextInputComponent name="energyIndex" kbType="" placeholder="Energy Index in kWh/m2a" isRequired={false} control={control} errors={errors} errorMsg="" />
 
                     <Text style={styles.header}>Featured Property</Text>
+                    {/* <SwitchButtonComponent name="featured" label="Featured Property Setup" control={control} stripeRef={stripeRef} customLabelCss={{textTransform:"capitalize"}} isFeatured={true} handleStripeModal={setShowStripeModal} /> */}
+                    {/* <SwitchButtonComponent name="featured" label="Featured Property Setup" control={control} isAllowingFeatured={isAllowingFeatured} customLabelCss={{textTransform:"capitalize"}} isFeatured={true} handleStripeModal={setShowStripeModal} /> */}
 
-                    
-                        <SwitchButtonComponent name="featured" label="Featured Property Setup" control={control} stripeRef={stripeRef} customLabelCss={{textTransform:"capitalize"}} isFeatured={true} handleStripeModal={setShowStripeModal} />
+                    <View style={{
+                        flex:1,
+                        flexDirection:"row",
+                        justifyContent:"space-between",
+                        alignItems:"center"
+                    }}>
+                        <Text style={{ color:COLORS.darkGray,textTransform:"capitalize" }}>Featured Property Setup</Text>
+
+                        <Controller
+                            control={control}
+                            name="featured"
+                            render={({ field: { onChange, onBlur, value  }}) => (
+                                <Switch
+                                    ref={stripeRef}
+                                    trackColor={{ false: COLORS.gray3, true: COLORS.primary }}
+                                    thumbColor={value ? COLORS.primary : "#f4f3f4"}
+                                    onValueChange={ val => {
+                                        if(!value) {
+                                            console.log("Value -- 0")
+                                            Alert.alert(
+                                                "Alert!",
+                                                "If you like to see this property as featured, you will be charged one GBP. Would you proceed?",
+                                                [
+                                                    {
+                                                        text: "OK",
+                                                        onPress: () => {
+                                                            setShowStripeModal(true)
+                                                            onChange(true)
+                                                            console.log("Value -- 1")
+                                                        }
+                                                    },
+                                                    {
+                                                        text: "Cancel",
+                                                        onPress: () => {
+                                                            setShowStripeModal(false)
+                                                            onChange(false)
+                                                            console.log("Value -- 0")
+                                                        }
+                                                    }
+                                                ]
+                                            );
+
+                                        }
+                                        else onChange(val)
+                                    }}
+                                    value={value}
+                                />
+                            )}
+                        />
+                    </View>
                    
 
                     {
@@ -559,12 +610,15 @@ const AddProperty = ({ navigation, route, selectedUserId, setUserId }) => {
                         }
                     </View>
                     {showStripeModal &&
-
-                            <StripeModal
-                                refEle={stripeRef}
-                                isVisible={showStripeModal}
-                                onClose={() => setShowStripeModal(false)}
-                            />
+                        <StripeModal
+                            isFeaturedAllowedHandler={setIsAllowingFeatured}
+                            setFeaturedValue={setValue}
+                            isVisible={showStripeModal}
+                            onClose={() => {
+                                setShowStripeModal(false)
+                                setValue( 'featured', false)
+                            }}
+                        />
                     }
                 </>
 
